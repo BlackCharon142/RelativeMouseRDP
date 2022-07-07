@@ -45,22 +45,33 @@ namespace RelativeMouseRDP
 
         #region Value Validation
 
-        private void txtConnectionSpecificationsPort_TextChanged(object sender, EventArgs e)
-        {
-            if (ConnectionSpecification.ValidatePort(txtConnectionSpecificationsPort.Text))
-            {
-                SystemSounds.Exclamation.Play();
-                txtConnectionSpecificationsPort.Text = "65535";
-            }
-        }
-
         private void txtConnectionSpecificationsIP_Leave(object sender, EventArgs e)
         {
-            if (!ConnectionSpecification.ValidateIP(txtConnectionSpecificationsIP.Text))
+            if (ConnectionSpecification.ValidateIP(txtConnectionSpecificationsIP.Text))
+                Log.Append("IP Changed to " + txtConnectionSpecificationsIP.Text);
+            else
             {
-                SystemSounds.Exclamation.Play();
-                txtConnectionSpecificationsIP.Text = "";
-                txtConnectionSpecificationsIP.Focus();
+                if (txtConnectionSpecificationsIP.Text != "")
+                {
+                    SystemSounds.Exclamation.Play();
+                    txtConnectionSpecificationsIP.Text = "";
+                    return;
+                }
+            }
+        }
+
+        private void txtConnectionSpecificationsPort_Leave(object sender, EventArgs e)
+        {
+            if (ConnectionSpecification.ValidatePort(txtConnectionSpecificationsPort.Text))
+                Log.Append("Port Changed to " + txtConnectionSpecificationsPort.Text);
+            else
+            {
+                if (txtConnectionSpecificationsPort.Text != "")
+                {
+                    SystemSounds.Exclamation.Play();
+                    txtConnectionSpecificationsPort.Text = "";
+                    return;
+                }
             }
         }
 
@@ -68,5 +79,13 @@ namespace RelativeMouseRDP
 
         #endregion
 
+        #region Timers
+
+        private void LogChecker_Tick(object sender, EventArgs e)
+        {
+            txtLog.Text = Log.ReadCurrentLog();
+        }
+
+        #endregion
     }
 }

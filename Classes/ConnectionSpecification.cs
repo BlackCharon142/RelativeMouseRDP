@@ -56,7 +56,7 @@ namespace RelativeMouseRDP
         {
             if (decimal.TryParse(port, out _))
             {
-                if (!(decimal.Parse(port) <= 65535))
+                if (decimal.Parse(port) <= 65535)
                 {
                     return true;
                 }

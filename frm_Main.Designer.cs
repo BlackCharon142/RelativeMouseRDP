@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.gpbConnectionMethod = new System.Windows.Forms.GroupBox();
             this.rbtnConnectionMethodAutomatic = new System.Windows.Forms.RadioButton();
             this.rbtnConnectionMethodUDP = new System.Windows.Forms.RadioButton();
@@ -42,7 +43,7 @@
             this.lblConnectionStatusDownloadSpeed = new System.Windows.Forms.Label();
             this.gpbConnectionStatusPing = new System.Windows.Forms.Label();
             this.gpbDevicePosition = new System.Windows.Forms.GroupBox();
-            this.rbtnDevicePositionHost = new System.Windows.Forms.RadioButton();
+            this.rbtnDevicePositionServer = new System.Windows.Forms.RadioButton();
             this.rbtnDevicePositionClient = new System.Windows.Forms.RadioButton();
             this.gpbConnectionSpecifications = new System.Windows.Forms.GroupBox();
             this.txtConnectionSpecificationsIP = new System.Windows.Forms.TextBox();
@@ -55,6 +56,7 @@
             this.btnChangeStatus = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.LogChecker = new System.Windows.Forms.Timer(this.components);
             this.gpbConnectionMethod.SuspendLayout();
             this.gpbConnectionStatus.SuspendLayout();
             this.gpbDevicePosition.SuspendLayout();
@@ -200,7 +202,7 @@
             // 
             // gpbDevicePosition
             // 
-            this.gpbDevicePosition.Controls.Add(this.rbtnDevicePositionHost);
+            this.gpbDevicePosition.Controls.Add(this.rbtnDevicePositionServer);
             this.gpbDevicePosition.Controls.Add(this.rbtnDevicePositionClient);
             this.gpbDevicePosition.Location = new System.Drawing.Point(12, 12);
             this.gpbDevicePosition.Name = "gpbDevicePosition";
@@ -209,16 +211,16 @@
             this.gpbDevicePosition.TabStop = false;
             this.gpbDevicePosition.Text = "Device Position";
             // 
-            // rbtnDevicePositionHost
+            // rbtnDevicePositionServer
             // 
-            this.rbtnDevicePositionHost.AutoSize = true;
-            this.rbtnDevicePositionHost.Location = new System.Drawing.Point(142, 26);
-            this.rbtnDevicePositionHost.Name = "rbtnDevicePositionHost";
-            this.rbtnDevicePositionHost.Size = new System.Drawing.Size(61, 24);
-            this.rbtnDevicePositionHost.TabIndex = 1;
-            this.rbtnDevicePositionHost.TabStop = true;
-            this.rbtnDevicePositionHost.Text = "Host";
-            this.rbtnDevicePositionHost.UseVisualStyleBackColor = true;
+            this.rbtnDevicePositionServer.AutoSize = true;
+            this.rbtnDevicePositionServer.Location = new System.Drawing.Point(142, 26);
+            this.rbtnDevicePositionServer.Name = "rbtnDevicePositionServer";
+            this.rbtnDevicePositionServer.Size = new System.Drawing.Size(71, 24);
+            this.rbtnDevicePositionServer.TabIndex = 1;
+            this.rbtnDevicePositionServer.TabStop = true;
+            this.rbtnDevicePositionServer.Text = "Server";
+            this.rbtnDevicePositionServer.UseVisualStyleBackColor = true;
             // 
             // rbtnDevicePositionClient
             // 
@@ -272,8 +274,8 @@
             this.txtConnectionSpecificationsPort.PlaceholderText = "12345";
             this.txtConnectionSpecificationsPort.Size = new System.Drawing.Size(57, 27);
             this.txtConnectionSpecificationsPort.TabIndex = 3;
-            this.txtConnectionSpecificationsPort.TextChanged += new System.EventHandler(this.txtConnectionSpecificationsPort_TextChanged);
             this.txtConnectionSpecificationsPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtConnectionSpecificationsPort_KeyPress);
+            this.txtConnectionSpecificationsPort.Leave += new System.EventHandler(this.txtConnectionSpecificationsPort_Leave);
             // 
             // lblConnectionSpecificationsIP
             // 
@@ -306,6 +308,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtLog.Size = new System.Drawing.Size(329, 378);
             this.txtLog.TabIndex = 0;
             // 
@@ -351,6 +354,12 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Status : ";
             // 
+            // LogChecker
+            // 
+            this.LogChecker.Enabled = true;
+            this.LogChecker.Interval = 500;
+            this.LogChecker.Tick += new System.EventHandler(this.LogChecker_Tick);
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -395,7 +404,7 @@
         private Label lblgpbConnectionStatusUploadSpeed;
         private Label lblConnectionStatusDownloadSpeed;
         private GroupBox gpbDevicePosition;
-        private RadioButton rbtnDevicePositionHost;
+        private RadioButton rbtnDevicePositionServer;
         private RadioButton rbtnDevicePositionClient;
         private GroupBox gpbConnectionSpecifications;
         private Label lblConnectionSpecificationsPort;
@@ -413,5 +422,6 @@
         private Label lblPing;
         private CheckBox checkBox1;
         private TextBox txtConnectionSpecificationsIP;
+        private System.Windows.Forms.Timer LogChecker;
     }
 }
