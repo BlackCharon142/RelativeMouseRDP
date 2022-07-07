@@ -45,6 +45,7 @@
             this.rbtnDevicePositionHost = new System.Windows.Forms.RadioButton();
             this.rbtnDevicePositionClient = new System.Windows.Forms.RadioButton();
             this.gpbConnectionSpecifications = new System.Windows.Forms.GroupBox();
+            this.txtConnectionSpecificationsIP = new System.Windows.Forms.TextBox();
             this.lblConnectionSpecificationsPort = new System.Windows.Forms.Label();
             this.txtConnectionSpecificationsPort = new System.Windows.Forms.TextBox();
             this.lblConnectionSpecificationsIP = new System.Windows.Forms.Label();
@@ -54,7 +55,6 @@
             this.btnChangeStatus = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtConnectionSpecificationsIP = new System.Windows.Forms.TextBox();
             this.gpbConnectionMethod.SuspendLayout();
             this.gpbConnectionStatus.SuspendLayout();
             this.gpbDevicePosition.SuspendLayout();
@@ -72,7 +72,7 @@
             this.gpbConnectionMethod.Location = new System.Drawing.Point(12, 296);
             this.gpbConnectionMethod.Name = "gpbConnectionMethod";
             this.gpbConnectionMethod.Size = new System.Drawing.Size(282, 120);
-            this.gpbConnectionMethod.TabIndex = 0;
+            this.gpbConnectionMethod.TabIndex = 3;
             this.gpbConnectionMethod.TabStop = false;
             this.gpbConnectionMethod.Text = "Connection Method";
             // 
@@ -83,7 +83,7 @@
             this.rbtnConnectionMethodAutomatic.Location = new System.Drawing.Point(6, 26);
             this.rbtnConnectionMethodAutomatic.Name = "rbtnConnectionMethodAutomatic";
             this.rbtnConnectionMethodAutomatic.Size = new System.Drawing.Size(99, 24);
-            this.rbtnConnectionMethodAutomatic.TabIndex = 2;
+            this.rbtnConnectionMethodAutomatic.TabIndex = 0;
             this.rbtnConnectionMethodAutomatic.TabStop = true;
             this.rbtnConnectionMethodAutomatic.Text = "Automatic";
             this.rbtnConnectionMethodAutomatic.UseVisualStyleBackColor = true;
@@ -94,7 +94,7 @@
             this.rbtnConnectionMethodUDP.Location = new System.Drawing.Point(6, 86);
             this.rbtnConnectionMethodUDP.Name = "rbtnConnectionMethodUDP";
             this.rbtnConnectionMethodUDP.Size = new System.Drawing.Size(204, 24);
-            this.rbtnConnectionMethodUDP.TabIndex = 1;
+            this.rbtnConnectionMethodUDP.TabIndex = 2;
             this.rbtnConnectionMethodUDP.Text = "UDP (Fast but not reliable)";
             this.rbtnConnectionMethodUDP.UseVisualStyleBackColor = true;
             // 
@@ -104,7 +104,7 @@
             this.rbtnConnectionMethodTCP.Location = new System.Drawing.Point(6, 56);
             this.rbtnConnectionMethodTCP.Name = "rbtnConnectionMethodTCP";
             this.rbtnConnectionMethodTCP.Size = new System.Drawing.Size(231, 24);
-            this.rbtnConnectionMethodTCP.TabIndex = 0;
+            this.rbtnConnectionMethodTCP.TabIndex = 1;
             this.rbtnConnectionMethodTCP.Text = "TCP (Reliable but maybe slow)";
             this.rbtnConnectionMethodTCP.UseVisualStyleBackColor = true;
             // 
@@ -121,7 +121,7 @@
             this.gpbConnectionStatus.Location = new System.Drawing.Point(12, 163);
             this.gpbConnectionStatus.Name = "gpbConnectionStatus";
             this.gpbConnectionStatus.Size = new System.Drawing.Size(282, 127);
-            this.gpbConnectionStatus.TabIndex = 1;
+            this.gpbConnectionStatus.TabIndex = 2;
             this.gpbConnectionStatus.TabStop = false;
             this.gpbConnectionStatus.Text = "Connection Status";
             // 
@@ -139,8 +139,8 @@
             this.lblPing.Location = new System.Drawing.Point(129, 96);
             this.lblPing.Name = "lblPing";
             this.lblPing.Size = new System.Drawing.Size(95, 20);
-            this.lblPing.TabIndex = 6;
-            this.lblPing.Text = "20 ms";
+            this.lblPing.TabIndex = 5;
+            this.lblPing.Text = "0 ms";
             this.lblPing.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblUploadSpeed
@@ -148,8 +148,8 @@
             this.lblUploadSpeed.Location = new System.Drawing.Point(129, 65);
             this.lblUploadSpeed.Name = "lblUploadSpeed";
             this.lblUploadSpeed.Size = new System.Drawing.Size(95, 20);
-            this.lblUploadSpeed.TabIndex = 5;
-            this.lblUploadSpeed.Text = "20 Mbit/s";
+            this.lblUploadSpeed.TabIndex = 3;
+            this.lblUploadSpeed.Text = "0 Mbit/s";
             this.lblUploadSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDownloadSpeed
@@ -157,8 +157,8 @@
             this.lblDownloadSpeed.Location = new System.Drawing.Point(129, 34);
             this.lblDownloadSpeed.Name = "lblDownloadSpeed";
             this.lblDownloadSpeed.Size = new System.Drawing.Size(95, 20);
-            this.lblDownloadSpeed.TabIndex = 4;
-            this.lblDownloadSpeed.Text = "20 Mbit/s";
+            this.lblDownloadSpeed.TabIndex = 1;
+            this.lblDownloadSpeed.Text = "0 Mbit/s";
             this.lblDownloadSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gpbConnectionStatusRefresh
@@ -168,7 +168,7 @@
             this.gpbConnectionStatusRefresh.Location = new System.Drawing.Point(244, 26);
             this.gpbConnectionStatusRefresh.Name = "gpbConnectionStatusRefresh";
             this.gpbConnectionStatusRefresh.Size = new System.Drawing.Size(32, 32);
-            this.gpbConnectionStatusRefresh.TabIndex = 3;
+            this.gpbConnectionStatusRefresh.TabIndex = 6;
             this.gpbConnectionStatusRefresh.UseVisualStyleBackColor = true;
             // 
             // lblgpbConnectionStatusUploadSpeed
@@ -186,7 +186,7 @@
             this.lblConnectionStatusDownloadSpeed.Location = new System.Drawing.Point(6, 34);
             this.lblConnectionStatusDownloadSpeed.Name = "lblConnectionStatusDownloadSpeed";
             this.lblConnectionStatusDownloadSpeed.Size = new System.Drawing.Size(124, 20);
-            this.lblConnectionStatusDownloadSpeed.TabIndex = 1;
+            this.lblConnectionStatusDownloadSpeed.TabIndex = 0;
             this.lblConnectionStatusDownloadSpeed.Text = "Download Speed";
             // 
             // gpbConnectionStatusPing
@@ -195,7 +195,7 @@
             this.gpbConnectionStatusPing.Location = new System.Drawing.Point(6, 96);
             this.gpbConnectionStatusPing.Name = "gpbConnectionStatusPing";
             this.gpbConnectionStatusPing.Size = new System.Drawing.Size(38, 20);
-            this.gpbConnectionStatusPing.TabIndex = 0;
+            this.gpbConnectionStatusPing.TabIndex = 4;
             this.gpbConnectionStatusPing.Text = "Ping";
             // 
             // gpbDevicePosition
@@ -205,7 +205,7 @@
             this.gpbDevicePosition.Location = new System.Drawing.Point(12, 12);
             this.gpbDevicePosition.Name = "gpbDevicePosition";
             this.gpbDevicePosition.Size = new System.Drawing.Size(282, 63);
-            this.gpbDevicePosition.TabIndex = 2;
+            this.gpbDevicePosition.TabIndex = 0;
             this.gpbDevicePosition.TabStop = false;
             this.gpbDevicePosition.Text = "Device Position";
             // 
@@ -240,9 +240,20 @@
             this.gpbConnectionSpecifications.Location = new System.Drawing.Point(12, 81);
             this.gpbConnectionSpecifications.Name = "gpbConnectionSpecifications";
             this.gpbConnectionSpecifications.Size = new System.Drawing.Size(282, 76);
-            this.gpbConnectionSpecifications.TabIndex = 3;
+            this.gpbConnectionSpecifications.TabIndex = 1;
             this.gpbConnectionSpecifications.TabStop = false;
             this.gpbConnectionSpecifications.Text = "Connection Specifications";
+            // 
+            // txtConnectionSpecificationsIP
+            // 
+            this.txtConnectionSpecificationsIP.Location = new System.Drawing.Point(31, 33);
+            this.txtConnectionSpecificationsIP.MaxLength = 15;
+            this.txtConnectionSpecificationsIP.Name = "txtConnectionSpecificationsIP";
+            this.txtConnectionSpecificationsIP.PlaceholderText = "000.000.000.000";
+            this.txtConnectionSpecificationsIP.Size = new System.Drawing.Size(141, 27);
+            this.txtConnectionSpecificationsIP.TabIndex = 1;
+            this.txtConnectionSpecificationsIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtConnectionSpecificationsIP_KeyPress);
+            this.txtConnectionSpecificationsIP.Leave += new System.EventHandler(this.txtConnectionSpecificationsIP_Leave);
             // 
             // lblConnectionSpecificationsPort
             // 
@@ -250,7 +261,7 @@
             this.lblConnectionSpecificationsPort.Location = new System.Drawing.Point(178, 36);
             this.lblConnectionSpecificationsPort.Name = "lblConnectionSpecificationsPort";
             this.lblConnectionSpecificationsPort.Size = new System.Drawing.Size(35, 20);
-            this.lblConnectionSpecificationsPort.TabIndex = 3;
+            this.lblConnectionSpecificationsPort.TabIndex = 2;
             this.lblConnectionSpecificationsPort.Text = "Port";
             // 
             // txtConnectionSpecificationsPort
@@ -260,7 +271,9 @@
             this.txtConnectionSpecificationsPort.Name = "txtConnectionSpecificationsPort";
             this.txtConnectionSpecificationsPort.PlaceholderText = "12345";
             this.txtConnectionSpecificationsPort.Size = new System.Drawing.Size(57, 27);
-            this.txtConnectionSpecificationsPort.TabIndex = 2;
+            this.txtConnectionSpecificationsPort.TabIndex = 3;
+            this.txtConnectionSpecificationsPort.TextChanged += new System.EventHandler(this.txtConnectionSpecificationsPort_TextChanged);
+            this.txtConnectionSpecificationsPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtConnectionSpecificationsPort_KeyPress);
             // 
             // lblConnectionSpecificationsIP
             // 
@@ -268,11 +281,14 @@
             this.lblConnectionSpecificationsIP.Location = new System.Drawing.Point(4, 36);
             this.lblConnectionSpecificationsIP.Name = "lblConnectionSpecificationsIP";
             this.lblConnectionSpecificationsIP.Size = new System.Drawing.Size(21, 20);
-            this.lblConnectionSpecificationsIP.TabIndex = 1;
+            this.lblConnectionSpecificationsIP.TabIndex = 0;
             this.lblConnectionSpecificationsIP.Text = "IP";
             // 
             // gpbLog
             // 
+            this.gpbLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gpbLog.Controls.Add(this.txtLog);
             this.gpbLog.Location = new System.Drawing.Point(300, 12);
             this.gpbLog.Name = "gpbLog";
@@ -311,7 +327,7 @@
             this.btnChangeStatus.Location = new System.Drawing.Point(516, 0);
             this.btnChangeStatus.Name = "btnChangeStatus";
             this.btnChangeStatus.Size = new System.Drawing.Size(94, 29);
-            this.btnChangeStatus.TabIndex = 2;
+            this.btnChangeStatus.TabIndex = 1;
             this.btnChangeStatus.Text = "Change Status";
             this.btnChangeStatus.UseVisualStyleBackColor = true;
             // 
@@ -334,15 +350,6 @@
             this.label1.Size = new System.Drawing.Size(60, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Status : ";
-            // 
-            // txtConnectionSpecificationsIP
-            // 
-            this.txtConnectionSpecificationsIP.Location = new System.Drawing.Point(31, 33);
-            this.txtConnectionSpecificationsIP.MaxLength = 15;
-            this.txtConnectionSpecificationsIP.Name = "txtConnectionSpecificationsIP";
-            this.txtConnectionSpecificationsIP.PlaceholderText = "000.000.000.000";
-            this.txtConnectionSpecificationsIP.Size = new System.Drawing.Size(141, 27);
-            this.txtConnectionSpecificationsIP.TabIndex = 4;
             // 
             // frm_Main
             // 
