@@ -16,7 +16,7 @@ namespace RelativeMouseRDP
         public static List<string> CurrentSessionLogs { get; set; } = new List<string>();
 
 
-        public static void Append(string logMessage)
+        public static void Register(string logMessage)
         {
             OversizeProtection();
             using (StreamWriter writer = File.AppendText(LogCurrentDirectory + LogFileName))
@@ -25,7 +25,7 @@ namespace RelativeMouseRDP
 
                 if (LogNumber == 0)
                 {
-                    log = "==============================\r\nLog Entry : \r\n";
+                    log = "==============================\r\nLog Entry :\r\n";
                     writer.WriteLine(log);
                     CurrentSessionLogs.Add(log);
                 }
@@ -60,7 +60,7 @@ namespace RelativeMouseRDP
             if (File.Exists(LogCurrentDirectory + LogFileName))
             {
                 FileInfo info = new FileInfo(LogCurrentDirectory + LogFileName);
-                if (((info.Length / 8) / (1024 * 1024)) >= 3)
+                if ((info.Length / (1024 * 1024)) >= 3.0f)
                 {
                     List<string> logs = File.ReadAllLines(LogCurrentDirectory + LogFileName).ToList();
                     int firstIndex = logs.IndexOf("Log Entry :");

@@ -29,16 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Main));
             this.gpbConnectionMethod = new System.Windows.Forms.GroupBox();
             this.rbtnConnectionMethodAutomatic = new System.Windows.Forms.RadioButton();
             this.rbtnConnectionMethodUDP = new System.Windows.Forms.RadioButton();
             this.rbtnConnectionMethodTCP = new System.Windows.Forms.RadioButton();
             this.gpbConnectionStatus = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chbConnectionStatusRefreshConstantly = new System.Windows.Forms.CheckBox();
             this.lblPing = new System.Windows.Forms.Label();
             this.lblUploadSpeed = new System.Windows.Forms.Label();
             this.lblDownloadSpeed = new System.Windows.Forms.Label();
-            this.gpbConnectionStatusRefresh = new System.Windows.Forms.Button();
+            this.btnConnectionStatusRefresh = new System.Windows.Forms.Button();
             this.lblgpbConnectionStatusUploadSpeed = new System.Windows.Forms.Label();
             this.lblConnectionStatusDownloadSpeed = new System.Windows.Forms.Label();
             this.gpbConnectionStatusPing = new System.Windows.Forms.Label();
@@ -52,18 +53,20 @@
             this.lblConnectionSpecificationsIP = new System.Windows.Forms.Label();
             this.gpbLog = new System.Windows.Forms.GroupBox();
             this.txtLog = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlStatusBar = new System.Windows.Forms.Panel();
             this.btnChangeStatus = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.pbVisualStatus = new System.Windows.Forms.PictureBox();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.LogChecker = new System.Windows.Forms.Timer(this.components);
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.UpdateStaus = new System.Windows.Forms.Timer(this.components);
             this.gpbConnectionMethod.SuspendLayout();
             this.gpbConnectionStatus.SuspendLayout();
             this.gpbDevicePosition.SuspendLayout();
             this.gpbConnectionSpecifications.SuspendLayout();
             this.gpbLog.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pnlStatusBar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbVisualStatus)).BeginInit();
             this.SuspendLayout();
             // 
             // gpbConnectionMethod
@@ -88,7 +91,9 @@
             this.rbtnConnectionMethodAutomatic.TabIndex = 0;
             this.rbtnConnectionMethodAutomatic.TabStop = true;
             this.rbtnConnectionMethodAutomatic.Text = "Automatic";
+            this.toolTip.SetToolTip(this.rbtnConnectionMethodAutomatic, resources.GetString("rbtnConnectionMethodAutomatic.ToolTip"));
             this.rbtnConnectionMethodAutomatic.UseVisualStyleBackColor = true;
+            this.rbtnConnectionMethodAutomatic.CheckedChanged += new System.EventHandler(this.rbtnConnectionMethodAutomatic_CheckedChanged);
             // 
             // rbtnConnectionMethodUDP
             // 
@@ -98,7 +103,11 @@
             this.rbtnConnectionMethodUDP.Size = new System.Drawing.Size(204, 24);
             this.rbtnConnectionMethodUDP.TabIndex = 2;
             this.rbtnConnectionMethodUDP.Text = "UDP (Fast but not reliable)";
+            this.toolTip.SetToolTip(this.rbtnConnectionMethodUDP, "UDP\r\nUDP does not require connection to be established and\r\nmaintained. It is a m" +
+        "uch faster, simpler, and efficient protocol tho\r\nsome data may get corrupted whe" +
+        "n using this protocol");
             this.rbtnConnectionMethodUDP.UseVisualStyleBackColor = true;
+            this.rbtnConnectionMethodUDP.CheckedChanged += new System.EventHandler(this.rbtnConnectionMethodUDP_CheckedChanged);
             // 
             // rbtnConnectionMethodTCP
             // 
@@ -108,15 +117,18 @@
             this.rbtnConnectionMethodTCP.Size = new System.Drawing.Size(231, 24);
             this.rbtnConnectionMethodTCP.TabIndex = 1;
             this.rbtnConnectionMethodTCP.Text = "TCP (Reliable but maybe slow)";
+            this.toolTip.SetToolTip(this.rbtnConnectionMethodTCP, "TCP\r\nTCP guarantees the integrity of the data being\r\n communicated over the netwo" +
+        "rk\r\n");
             this.rbtnConnectionMethodTCP.UseVisualStyleBackColor = true;
+            this.rbtnConnectionMethodTCP.CheckedChanged += new System.EventHandler(this.rbtnConnectionMethodTCP_CheckedChanged);
             // 
             // gpbConnectionStatus
             // 
-            this.gpbConnectionStatus.Controls.Add(this.checkBox1);
+            this.gpbConnectionStatus.Controls.Add(this.chbConnectionStatusRefreshConstantly);
             this.gpbConnectionStatus.Controls.Add(this.lblPing);
             this.gpbConnectionStatus.Controls.Add(this.lblUploadSpeed);
             this.gpbConnectionStatus.Controls.Add(this.lblDownloadSpeed);
-            this.gpbConnectionStatus.Controls.Add(this.gpbConnectionStatusRefresh);
+            this.gpbConnectionStatus.Controls.Add(this.btnConnectionStatusRefresh);
             this.gpbConnectionStatus.Controls.Add(this.lblgpbConnectionStatusUploadSpeed);
             this.gpbConnectionStatus.Controls.Add(this.lblConnectionStatusDownloadSpeed);
             this.gpbConnectionStatus.Controls.Add(this.gpbConnectionStatusPing);
@@ -127,14 +139,17 @@
             this.gpbConnectionStatus.TabStop = false;
             this.gpbConnectionStatus.Text = "Connection Status";
             // 
-            // checkBox1
+            // chbConnectionStatusRefreshConstantly
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(251, 65);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(18, 17);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chbConnectionStatusRefreshConstantly.AutoSize = true;
+            this.chbConnectionStatusRefreshConstantly.Location = new System.Drawing.Point(251, 65);
+            this.chbConnectionStatusRefreshConstantly.Name = "chbConnectionStatusRefreshConstantly";
+            this.chbConnectionStatusRefreshConstantly.Size = new System.Drawing.Size(18, 17);
+            this.chbConnectionStatusRefreshConstantly.TabIndex = 7;
+            this.toolTip.SetToolTip(this.chbConnectionStatusRefreshConstantly, "Live Status\r\nShows the connection strength live as data is being sent and receive" +
+        "d");
+            this.chbConnectionStatusRefreshConstantly.UseVisualStyleBackColor = true;
+            this.chbConnectionStatusRefreshConstantly.CheckedChanged += new System.EventHandler(this.chbConnectionStatusRefreshConstantly_CheckedChanged);
             // 
             // lblPing
             // 
@@ -163,15 +178,18 @@
             this.lblDownloadSpeed.Text = "0 Mbit/s";
             this.lblDownloadSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // gpbConnectionStatusRefresh
+            // btnConnectionStatusRefresh
             // 
-            this.gpbConnectionStatusRefresh.BackgroundImage = global::RelativeMouseRDP.Properties.Resources.refresh_32px;
-            this.gpbConnectionStatusRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.gpbConnectionStatusRefresh.Location = new System.Drawing.Point(244, 26);
-            this.gpbConnectionStatusRefresh.Name = "gpbConnectionStatusRefresh";
-            this.gpbConnectionStatusRefresh.Size = new System.Drawing.Size(32, 32);
-            this.gpbConnectionStatusRefresh.TabIndex = 6;
-            this.gpbConnectionStatusRefresh.UseVisualStyleBackColor = true;
+            this.btnConnectionStatusRefresh.BackgroundImage = global::RelativeMouseRDP.Properties.Resources.refresh_32px;
+            this.btnConnectionStatusRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnConnectionStatusRefresh.Location = new System.Drawing.Point(244, 26);
+            this.btnConnectionStatusRefresh.Name = "btnConnectionStatusRefresh";
+            this.btnConnectionStatusRefresh.Size = new System.Drawing.Size(32, 32);
+            this.btnConnectionStatusRefresh.TabIndex = 6;
+            this.toolTip.SetToolTip(this.btnConnectionStatusRefresh, "Examine Connection Status\r\nExamines the total strength of the connection between " +
+        "the two ends");
+            this.btnConnectionStatusRefresh.UseVisualStyleBackColor = true;
+            this.btnConnectionStatusRefresh.Click += new System.EventHandler(this.btnConnectionStatusRefresh_Click);
             // 
             // lblgpbConnectionStatusUploadSpeed
             // 
@@ -220,7 +238,9 @@
             this.rbtnDevicePositionServer.TabIndex = 1;
             this.rbtnDevicePositionServer.TabStop = true;
             this.rbtnDevicePositionServer.Text = "Server";
+            this.toolTip.SetToolTip(this.rbtnDevicePositionServer, "Server\r\nSets the program to listen for incoming data from a client");
             this.rbtnDevicePositionServer.UseVisualStyleBackColor = true;
+            this.rbtnDevicePositionServer.CheckedChanged += new System.EventHandler(this.rbtnDevicePositionServer_CheckedChanged);
             // 
             // rbtnDevicePositionClient
             // 
@@ -231,7 +251,9 @@
             this.rbtnDevicePositionClient.TabIndex = 0;
             this.rbtnDevicePositionClient.TabStop = true;
             this.rbtnDevicePositionClient.Text = "Client";
+            this.toolTip.SetToolTip(this.rbtnDevicePositionClient, "Client\r\nSets the program to send data to server\r\n");
             this.rbtnDevicePositionClient.UseVisualStyleBackColor = true;
+            this.rbtnDevicePositionClient.CheckedChanged += new System.EventHandler(this.rbtnDevicePositionClient_CheckedChanged);
             // 
             // gpbConnectionSpecifications
             // 
@@ -254,6 +276,8 @@
             this.txtConnectionSpecificationsIP.PlaceholderText = "000.000.000.000";
             this.txtConnectionSpecificationsIP.Size = new System.Drawing.Size(141, 27);
             this.txtConnectionSpecificationsIP.TabIndex = 1;
+            this.txtConnectionSpecificationsIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.txtConnectionSpecificationsIP, "IP\r\nThe IP that program will send/get data from");
             this.txtConnectionSpecificationsIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtConnectionSpecificationsIP_KeyPress);
             this.txtConnectionSpecificationsIP.Leave += new System.EventHandler(this.txtConnectionSpecificationsIP_Leave);
             // 
@@ -274,6 +298,9 @@
             this.txtConnectionSpecificationsPort.PlaceholderText = "12345";
             this.txtConnectionSpecificationsPort.Size = new System.Drawing.Size(57, 27);
             this.txtConnectionSpecificationsPort.TabIndex = 3;
+            this.txtConnectionSpecificationsPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.txtConnectionSpecificationsPort, "Port\r\nThe channel that two ends use to communicate with each other\r\nThe Port shou" +
+        "ld be the same on both ends");
             this.txtConnectionSpecificationsPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtConnectionSpecificationsPort_KeyPress);
             this.txtConnectionSpecificationsPort.Leave += new System.EventHandler(this.txtConnectionSpecificationsPort_Leave);
             // 
@@ -312,17 +339,17 @@
             this.txtLog.Size = new System.Drawing.Size(329, 378);
             this.txtLog.TabIndex = 0;
             // 
-            // panel1
+            // pnlStatusBar
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.btnChangeStatus);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 422);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(647, 33);
-            this.panel1.TabIndex = 5;
+            this.pnlStatusBar.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlStatusBar.Controls.Add(this.btnChangeStatus);
+            this.pnlStatusBar.Controls.Add(this.pbVisualStatus);
+            this.pnlStatusBar.Controls.Add(this.lblStatus);
+            this.pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlStatusBar.Location = new System.Drawing.Point(0, 422);
+            this.pnlStatusBar.Name = "pnlStatusBar";
+            this.pnlStatusBar.Size = new System.Drawing.Size(647, 33);
+            this.pnlStatusBar.TabIndex = 5;
             // 
             // btnChangeStatus
             // 
@@ -333,26 +360,27 @@
             this.btnChangeStatus.TabIndex = 1;
             this.btnChangeStatus.Text = "Change Status";
             this.btnChangeStatus.UseVisualStyleBackColor = true;
+            this.btnChangeStatus.Click += new System.EventHandler(this.btnChangeStatus_Click);
             // 
-            // pictureBox1
+            // pbVisualStatus
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pictureBox1.Location = new System.Drawing.Point(610, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(33, 29);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            this.pbVisualStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pbVisualStatus.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pbVisualStatus.Location = new System.Drawing.Point(610, 0);
+            this.pbVisualStatus.Name = "pbVisualStatus";
+            this.pbVisualStatus.Size = new System.Drawing.Size(33, 29);
+            this.pbVisualStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbVisualStatus.TabIndex = 1;
+            this.pbVisualStatus.TabStop = false;
             // 
-            // label1
+            // lblStatus
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Status : ";
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(6, 6);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(60, 20);
+            this.lblStatus.TabIndex = 0;
+            this.lblStatus.Text = "Status : ";
             // 
             // LogChecker
             // 
@@ -360,12 +388,24 @@
             this.LogChecker.Interval = 500;
             this.LogChecker.Tick += new System.EventHandler(this.LogChecker_Tick);
             // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 10000;
+            this.toolTip.InitialDelay = 340;
+            this.toolTip.ReshowDelay = 68;
+            // 
+            // UpdateStaus
+            // 
+            this.UpdateStaus.Enabled = true;
+            this.UpdateStaus.Interval = 1000;
+            this.UpdateStaus.Tick += new System.EventHandler(this.UpdateStaus_Tick);
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(647, 455);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlStatusBar);
             this.Controls.Add(this.gpbLog);
             this.Controls.Add(this.gpbConnectionSpecifications);
             this.Controls.Add(this.gpbDevicePosition);
@@ -386,9 +426,9 @@
             this.gpbConnectionSpecifications.PerformLayout();
             this.gpbLog.ResumeLayout(false);
             this.gpbLog.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.pnlStatusBar.ResumeLayout(false);
+            this.pnlStatusBar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbVisualStatus)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -410,18 +450,20 @@
         private Label lblConnectionSpecificationsPort;
         private TextBox txtConnectionSpecificationsPort;
         private Label lblConnectionSpecificationsIP;
-        private Button gpbConnectionStatusRefresh;
+        private Button btnConnectionStatusRefresh;
         private GroupBox gpbLog;
         private TextBox txtLog;
-        private Panel panel1;
-        private PictureBox pictureBox1;
-        private Label label1;
+        private Panel pnlStatusBar;
+        private PictureBox pbVisualStatus;
+        private Label lblStatus;
         private Button btnChangeStatus;
         private Label lblUploadSpeed;
         private Label lblDownloadSpeed;
         private Label lblPing;
-        private CheckBox checkBox1;
+        private CheckBox chbConnectionStatusRefreshConstantly;
         private TextBox txtConnectionSpecificationsIP;
         private System.Windows.Forms.Timer LogChecker;
+        private ToolTip toolTip;
+        private System.Windows.Forms.Timer UpdateStaus;
     }
 }
