@@ -84,12 +84,10 @@
             // rbtnConnectionMethodAutomatic
             // 
             this.rbtnConnectionMethodAutomatic.AutoSize = true;
-            this.rbtnConnectionMethodAutomatic.Checked = true;
             this.rbtnConnectionMethodAutomatic.Location = new System.Drawing.Point(6, 26);
             this.rbtnConnectionMethodAutomatic.Name = "rbtnConnectionMethodAutomatic";
             this.rbtnConnectionMethodAutomatic.Size = new System.Drawing.Size(99, 24);
             this.rbtnConnectionMethodAutomatic.TabIndex = 0;
-            this.rbtnConnectionMethodAutomatic.TabStop = true;
             this.rbtnConnectionMethodAutomatic.Text = "Automatic";
             this.toolTip.SetToolTip(this.rbtnConnectionMethodAutomatic, resources.GetString("rbtnConnectionMethodAutomatic.ToolTip"));
             this.rbtnConnectionMethodAutomatic.UseVisualStyleBackColor = true;
@@ -236,7 +234,6 @@
             this.rbtnDevicePositionServer.Name = "rbtnDevicePositionServer";
             this.rbtnDevicePositionServer.Size = new System.Drawing.Size(71, 24);
             this.rbtnDevicePositionServer.TabIndex = 1;
-            this.rbtnDevicePositionServer.TabStop = true;
             this.rbtnDevicePositionServer.Text = "Server";
             this.toolTip.SetToolTip(this.rbtnDevicePositionServer, "Server\r\nSets the program to listen for incoming data from a client");
             this.rbtnDevicePositionServer.UseVisualStyleBackColor = true;
@@ -249,7 +246,6 @@
             this.rbtnDevicePositionClient.Name = "rbtnDevicePositionClient";
             this.rbtnDevicePositionClient.Size = new System.Drawing.Size(68, 24);
             this.rbtnDevicePositionClient.TabIndex = 0;
-            this.rbtnDevicePositionClient.TabStop = true;
             this.rbtnDevicePositionClient.Text = "Client";
             this.toolTip.SetToolTip(this.rbtnDevicePositionClient, "Client\r\nSets the program to send data to server\r\n");
             this.rbtnDevicePositionClient.UseVisualStyleBackColor = true;
@@ -261,6 +257,7 @@
             this.gpbConnectionSpecifications.Controls.Add(this.lblConnectionSpecificationsPort);
             this.gpbConnectionSpecifications.Controls.Add(this.txtConnectionSpecificationsPort);
             this.gpbConnectionSpecifications.Controls.Add(this.lblConnectionSpecificationsIP);
+            this.gpbConnectionSpecifications.Enabled = false;
             this.gpbConnectionSpecifications.Location = new System.Drawing.Point(12, 81);
             this.gpbConnectionSpecifications.Name = "gpbConnectionSpecifications";
             this.gpbConnectionSpecifications.Size = new System.Drawing.Size(282, 76);
@@ -277,7 +274,8 @@
             this.txtConnectionSpecificationsIP.Size = new System.Drawing.Size(141, 27);
             this.txtConnectionSpecificationsIP.TabIndex = 1;
             this.txtConnectionSpecificationsIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.txtConnectionSpecificationsIP, "IP\r\nThe IP that program will send/get data from");
+            this.toolTip.SetToolTip(this.txtConnectionSpecificationsIP, "IP\r\nThe IP that program will send/get data from\r\n\r\nFor Server Leave empty to acce" +
+        "pt incoming data\r\n from all ip addresses");
             this.txtConnectionSpecificationsIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtConnectionSpecificationsIP_KeyPress);
             this.txtConnectionSpecificationsIP.Leave += new System.EventHandler(this.txtConnectionSpecificationsIP_Leave);
             // 
@@ -298,6 +296,7 @@
             this.txtConnectionSpecificationsPort.PlaceholderText = "12345";
             this.txtConnectionSpecificationsPort.Size = new System.Drawing.Size(57, 27);
             this.txtConnectionSpecificationsPort.TabIndex = 3;
+            this.txtConnectionSpecificationsPort.Text = "54321";
             this.txtConnectionSpecificationsPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip.SetToolTip(this.txtConnectionSpecificationsPort, "Port\r\nThe channel that two ends use to communicate with each other\r\nThe Port shou" +
         "ld be the same on both ends");
@@ -321,23 +320,27 @@
             this.gpbLog.Controls.Add(this.txtLog);
             this.gpbLog.Location = new System.Drawing.Point(300, 12);
             this.gpbLog.Name = "gpbLog";
-            this.gpbLog.Size = new System.Drawing.Size(335, 404);
+            this.gpbLog.Size = new System.Drawing.Size(584, 404);
             this.gpbLog.TabIndex = 4;
             this.gpbLog.TabStop = false;
             this.gpbLog.Text = "Log";
             // 
             // txtLog
             // 
+            this.txtLog.BackColor = System.Drawing.SystemColors.Control;
             this.txtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtLog.ForeColor = System.Drawing.SystemColors.WindowText;
             this.txtLog.Location = new System.Drawing.Point(3, 23);
             this.txtLog.MaxLength = 999999999;
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(329, 378);
+            this.txtLog.Size = new System.Drawing.Size(578, 378);
             this.txtLog.TabIndex = 0;
+            this.toolTip.SetToolTip(this.txtLog, "Double Click To Stop Showing The Live Log");
+            this.txtLog.DoubleClick += new System.EventHandler(this.txtLog_DoubleClick);
             // 
             // pnlStatusBar
             // 
@@ -348,27 +351,26 @@
             this.pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlStatusBar.Location = new System.Drawing.Point(0, 422);
             this.pnlStatusBar.Name = "pnlStatusBar";
-            this.pnlStatusBar.Size = new System.Drawing.Size(647, 33);
+            this.pnlStatusBar.Size = new System.Drawing.Size(896, 33);
             this.pnlStatusBar.TabIndex = 5;
             // 
             // btnChangeStatus
             // 
             this.btnChangeStatus.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnChangeStatus.Location = new System.Drawing.Point(516, 0);
+            this.btnChangeStatus.Location = new System.Drawing.Point(766, 0);
             this.btnChangeStatus.Name = "btnChangeStatus";
-            this.btnChangeStatus.Size = new System.Drawing.Size(94, 29);
+            this.btnChangeStatus.Size = new System.Drawing.Size(97, 29);
             this.btnChangeStatus.TabIndex = 1;
-            this.btnChangeStatus.Text = "Change Status";
+            this.btnChangeStatus.Text = "Start";
             this.btnChangeStatus.UseVisualStyleBackColor = true;
             this.btnChangeStatus.Click += new System.EventHandler(this.btnChangeStatus_Click);
             // 
             // pbVisualStatus
             // 
-            this.pbVisualStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbVisualStatus.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pbVisualStatus.Location = new System.Drawing.Point(610, 0);
+            this.pbVisualStatus.Location = new System.Drawing.Point(863, 0);
             this.pbVisualStatus.Name = "pbVisualStatus";
-            this.pbVisualStatus.Size = new System.Drawing.Size(33, 29);
+            this.pbVisualStatus.Size = new System.Drawing.Size(29, 29);
             this.pbVisualStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbVisualStatus.TabIndex = 1;
             this.pbVisualStatus.TabStop = false;
@@ -404,7 +406,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(647, 455);
+            this.ClientSize = new System.Drawing.Size(896, 455);
             this.Controls.Add(this.pnlStatusBar);
             this.Controls.Add(this.gpbLog);
             this.Controls.Add(this.gpbConnectionSpecifications);
@@ -416,6 +418,7 @@
             this.MinimizeBox = false;
             this.Name = "frm_Main";
             this.Text = "RDP Relative Mouse";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_Main_FormClosing);
             this.gpbConnectionMethod.ResumeLayout(false);
             this.gpbConnectionMethod.PerformLayout();
             this.gpbConnectionStatus.ResumeLayout(false);

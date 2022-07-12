@@ -19,23 +19,47 @@ namespace RelativeMouseRDP
         public static void Register(string logMessage)
         {
             OversizeProtection();
-            using (StreamWriter writer = File.AppendText(LogCurrentDirectory + LogFileName))
+
+            bool successful = false;
+
+            do
             {
-                string log;
-
-                if (LogNumber == 0)
+                try
                 {
-                    log = "==============================\r\nLog Entry :\r\n";
-                    writer.WriteLine(log);
-                    CurrentSessionLogs.Add(log);
+                    string log;
+
+                    if (LogNumber == 0)
+                    {
+                        log = "==============================\r\nLog Entry :\r\n\r\n";
+                        StreamWriter writer = File.AppendText(LogCurrentDirectory + LogFileName);
+                        writer.WriteLine(log);
+                        CurrentSessionLogs.Add(log);
+                        writer.Close();
+                    }
+
+                    log = string.Format("[{0} | {1}]\r\n{2} : {3}\r\n", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString(), LogNumber, logMessage);
+
+                    do
+                    {
+                        if (!IsFileLocked())
+                        {
+                            StreamWriter writer = File.AppendText(LogCurrentDirectory + LogFileName);
+                            writer.WriteLine(log);
+                            CurrentSessionLogs.Add(log);
+                            writer.Close();
+                            successful = true;
+                        }
+                    } while (IsFileLocked());
+
+                    LogNumber++;
                 }
+                catch
+                {
+                    successful = false;
+                }
+            } while (!successful);
 
-                log = string.Format("[{0} | {1}]\r\n{2} : {3}", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString(), LogNumber, logMessage);
-                writer.WriteLine(log);
-                CurrentSessionLogs.Add(log);
 
-                LogNumber++;
-            }
         }
 
         public static string Read()
@@ -57,23 +81,52 @@ namespace RelativeMouseRDP
 
         public static void OversizeProtection()
         {
-            if (File.Exists(LogCurrentDirectory + LogFileName))
+            try
             {
-                FileInfo info = new FileInfo(LogCurrentDirectory + LogFileName);
-                if ((info.Length / (1024 * 1024)) >= 3.0f)
+                if (File.Exists(LogCurrentDirectory + LogFileName))
                 {
-                    List<string> logs = File.ReadAllLines(LogCurrentDirectory + LogFileName).ToList();
-                    int firstIndex = logs.IndexOf("Log Entry :");
-                    int nextIndex = logs.IndexOf("Log Entry :", firstIndex);
-                    logs.RemoveRange(firstIndex, nextIndex - firstIndex);
-                    File.WriteAllLines(LogCurrentDirectory + LogFileName, logs.ToArray());
+                    FileInfo info = new FileInfo(LogCurrentDirectory + LogFileName);
+                    if ((info.Length / (1024 * 1024)) >= 3.0f)
+                    {
+                        List<string> logs = File.ReadAllLines(LogCurrentDirectory + LogFileName).ToList();
+                        int firstIndex = logs.IndexOf("Log Entry :");
+                        int nextIndex = logs.IndexOf("Log Entry :", firstIndex);
+                        logs.RemoveRange(firstIndex, nextIndex - firstIndex);
+
+                        do
+                        {
+                            if (!IsFileLocked())
+                            {
+                                File.WriteAllLines(LogCurrentDirectory + LogFileName, logs.ToArray());
+                            }
+                        } while (IsFileLocked());
+
+                    }
                 }
             }
+            catch { }
 
             if (CurrentSessionLogs.Count >= 32767)
             {
                 CurrentSessionLogs.RemoveAt(0);
             }
+        }
+
+        private static bool IsFileLocked()
+        {
+            FileInfo file = new FileInfo(LogCurrentDirectory + LogFileName);
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

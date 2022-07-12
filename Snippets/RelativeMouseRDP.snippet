@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>Register Log</Title>
+            <Description>Creates a Log.Register() statement</Description>
+            <Author>AJ</Author>
+            <Shortcut>rl</Shortcut>
+        </Header>
+        <Snippet>
+            <Code Language="CSharp">
+                <![CDATA[Log.Register($LogMessage$);]]>
+            </Code>
+            <Declarations>
+                <Literal>
+                    <ID>LogMessage</ID>
+                    <ToolTip>The log message that will be saved</ToolTip>
+                    <Default>""</Default>
+                </Literal>
+            </Declarations>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>   

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RelativeMouseRDP
 {
-    internal class ConnectionSpecification
+    public class ConnectionSpecification
     {
         public string IP { get; set; }
-        public int Port { get; set; }
+        public int Port { get; set; } = 54321;
 
-        public ConnectionSpecification(string _IP, int _Port)
+        public ConnectionSpecification(string _IP, int _Port = 54321)
         {
             IP = _IP;
             Port = _Port;
@@ -45,7 +46,7 @@ namespace RelativeMouseRDP
 
         public bool ValidatePort()
         {
-            if (Port >= 65535)
+            if (Port <= 65535)
             {
                 return true;
             }
@@ -63,5 +64,35 @@ namespace RelativeMouseRDP
             }
             return false;
         }
+
+        public string FullDetail()
+        {
+            return IP + ":" + Port;
+        }
+
+        public static string SplitIP(string fullDetail)
+        {
+            if (ValidateIP(fullDetail.Split(":")[0]))
+            {
+                return fullDetail.Split(":")[0];
+            }
+            else
+            {
+                return "*.*.*.*";
+            }
+        }
+
+        public static int SplitPort(string fullDetail)
+        {
+            if (ValidatePort(fullDetail.Split(":")[1]))
+            {
+                return int.Parse(fullDetail.Split(":")[1]);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
     }
 }

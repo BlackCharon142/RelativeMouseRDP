@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -14,9 +15,19 @@ namespace RelativeMouseRDP
 {
     public partial class frm_Main : Form
     {
+        bool showLiveLog = true;
+
         public frm_Main()
         {
             InitializeComponent();
+        }
+
+        private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (EstablishConnection.GetServerStatus())
+            {
+                EstablishConnection.StopServer();
+            }
         }
 
         #region Validations
@@ -47,11 +58,16 @@ namespace RelativeMouseRDP
 
         private void txtConnectionSpecificationsIP_Leave(object sender, EventArgs e)
         {
-            if (ConnectionSpecification.ValidateIP(txtConnectionSpecificationsIP.Text))
-                Log.Register("IP Set to " + txtConnectionSpecificationsIP.Text);
+            if ((txtConnectionSpecificationsIP.Text == "" && EstablishConnection.GetPosition() == Positions.Server) || ConnectionSpecification.ValidateIP(txtConnectionSpecificationsIP.Text))
+            {
+                if (EstablishConnection.SetConnectionSpecification(txtConnectionSpecificationsIP.Text))
+                {
+                    Log.Register("IP Set to " + (txtConnectionSpecificationsIP.Text == "" ? "All" : txtConnectionSpecificationsIP.Text));
+                }
+            }
             else
             {
-                if (txtConnectionSpecificationsIP.Text != "")
+                if (txtConnectionSpecificationsIP.Text != "" || EstablishConnection.GetPosition() == Positions.Client)
                 {
                     SystemSounds.Exclamation.Play();
                     txtConnectionSpecificationsIP.Text = "";
@@ -63,7 +79,12 @@ namespace RelativeMouseRDP
         private void txtConnectionSpecificationsPort_Leave(object sender, EventArgs e)
         {
             if (ConnectionSpecification.ValidatePort(txtConnectionSpecificationsPort.Text))
-                Log.Register("Port Set to " + txtConnectionSpecificationsPort.Text);
+            {
+                if (EstablishConnection.SetConnectionSpecification(null, int.Parse(txtConnectionSpecificationsPort.Text)))
+                {
+                    Log.Register("Port Set to " + txtConnectionSpecificationsPort.Text);
+                }
+            }
             else
             {
                 if (txtConnectionSpecificationsPort.Text != "")
@@ -83,12 +104,26 @@ namespace RelativeMouseRDP
 
         private void LogChecker_Tick(object sender, EventArgs e)
         {
-            txtLog.Text = Log.ReadCurrentLog();
+            if (showLiveLog)
+            {
+                if (txtLog.Text != Log.ReadCurrentLog())
+                    txtLog.Text = Log.ReadCurrentLog();
+
+                txtLog.SelectionStart = txtLog.Text.Length;
+                txtLog.ScrollToCaret();
+            }
         }
 
         private void UpdateStaus_Tick(object sender, EventArgs e)
         {
+            string defaultStatusText = "Status : ";
+            lblStatus.Text = defaultStatusText + (EstablishConnection.GetServerStatus() ? "Online" : "Offline");
+
+            ChangeVisualStatus(EstablishConnection.GetServerStatus());
+
             toolTip.SetToolTip(pbVisualStatus, lblStatus.Text);
+
+            btnChangeStatus.Text = (EstablishConnection.GetServerStatus() ? "Stop" : "Start");
         }
 
         #endregion
@@ -98,13 +133,25 @@ namespace RelativeMouseRDP
         private void rbtnDevicePositionClient_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnDevicePositionClient.Checked)
-                Log.Register("Device Position Set to " + rbtnDevicePositionClient.Text);
+            {
+                if (EstablishConnection.SetPosition(Positions.Client))
+                {
+                    gpbConnectionSpecifications.Enabled = true;
+                    Log.Register("Device Position Set to " + rbtnDevicePositionClient.Text);
+                }
+            }
         }
 
         private void rbtnDevicePositionServer_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnDevicePositionServer.Checked)
-                Log.Register("Device Position Set to " + rbtnDevicePositionServer.Text);
+            {
+                if (EstablishConnection.SetPosition(Positions.Server))
+                {
+                    gpbConnectionSpecifications.Enabled = true;
+                    Log.Register("Device Position Set to " + rbtnDevicePositionServer.Text);
+                }
+            }
         }
 
         #endregion
@@ -114,19 +161,29 @@ namespace RelativeMouseRDP
         private void rbtnConnectionMethodAutomatic_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnConnectionMethodAutomatic.Checked)
-                Log.Register("Connection Method Set to " + rbtnConnectionMethodAutomatic.Text);
+                Log.Register("Connection Method Set to " + rbtnConnectionMethodAutomatic.Text + "(Work in Progress)");
         }
 
         private void rbtnConnectionMethodTCP_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnConnectionMethodTCP.Checked)
-                Log.Register("Connection Method Set to " + rbtnConnectionMethodTCP.Text);
+            {
+                if (EstablishConnection.SetConnectionMethod(ConnectionMethods.TCP))
+                {
+                    Log.Register("Connection Method Set to " + rbtnConnectionMethodTCP.Text);
+                }
+            }
         }
 
         private void rbtnConnectionMethodUDP_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnConnectionMethodUDP.Checked)
-                Log.Register("Connection Method Set to " + rbtnConnectionMethodUDP.Text);
+            {
+                if (EstablishConnection.SetConnectionMethod(ConnectionMethods.UDP))
+                {
+                    Log.Register("Connection Method Set to " + rbtnConnectionMethodUDP.Text);
+                }
+            }
         }
 
         #endregion
@@ -150,14 +207,46 @@ namespace RelativeMouseRDP
 
         #endregion
 
-        #region Set Status Bar
+        #region Set Log Status
 
-        private void btnChangeStatus_Click(object sender, EventArgs e)
+        private void txtLog_DoubleClick(object sender, EventArgs e)
         {
-            Log.Register("Changing Status Started...");
+            showLiveLog = !showLiveLog;
+            txtLog.BackColor = txtLog.BackColor;
+            txtLog.ForeColor = txtLog.ForeColor == SystemColors.GrayText ? SystemColors.WindowText : SystemColors.GrayText;
         }
 
         #endregion
 
+        #region Set Status Bar
+
+        private void btnChangeStatus_Click(object sender, EventArgs e)
+        {
+            EstablishConnection.ChangeServerStatus();
+        }
+
+        private void ChangeVisualStatus(bool status)
+        {
+            if (status)
+            {
+                pbVisualStatus.Refresh();
+                Graphics g = pbVisualStatus.CreateGraphics();
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                g.DrawEllipse(new Pen(Color.FromArgb(21, 224, 91), 4), (pbVisualStatus.Width / 4), (pbVisualStatus.Height / 4), pbVisualStatus.Width / 2, pbVisualStatus.Height / 2);
+            }
+            else
+            {
+                pbVisualStatus.Refresh();
+                Graphics g = pbVisualStatus.CreateGraphics();
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                g.DrawEllipse(new Pen(Brushes.Red, 4), (pbVisualStatus.Width / 4), (pbVisualStatus.Height / 4), pbVisualStatus.Width / 2, pbVisualStatus.Height / 2);
+            }
+        }
+
+        #endregion
     }
 }
