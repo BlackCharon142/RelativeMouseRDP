@@ -60,6 +60,21 @@
             this.LogChecker = new System.Windows.Forms.Timer(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.UpdateStaus = new System.Windows.Forms.Timer(this.components);
+            this.gpbMouseOptions = new System.Windows.Forms.GroupBox();
+            this.txtSkipPackageCount = new System.Windows.Forms.TextBox();
+            this.gpbShortcuts = new System.Windows.Forms.GroupBox();
+            this.txtFastActionMenuShortcut = new System.Windows.Forms.TextBox();
+            this.lblFastActionMenuShortcut = new System.Windows.Forms.Label();
+            this.lblSkipPackageCount = new System.Windows.Forms.Label();
+            this.rbtnInputTypeRHID = new System.Windows.Forms.RadioButton();
+            this.rbtnInputTypeIWT = new System.Windows.Forms.RadioButton();
+            this.cmbTrackWindowOrDevice = new System.Windows.Forms.ComboBox();
+            this.lblTrackWindowOrDevice = new System.Windows.Forms.Label();
+            this.CheckOverlay = new System.Windows.Forms.Timer(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chbSendCursorFinalPosition = new System.Windows.Forms.CheckBox();
+            this.chbRequestCursorType = new System.Windows.Forms.CheckBox();
+            this.chbCompressData = new System.Windows.Forms.CheckBox();
             this.gpbConnectionMethod.SuspendLayout();
             this.gpbConnectionStatus.SuspendLayout();
             this.gpbDevicePosition.SuspendLayout();
@@ -67,6 +82,9 @@
             this.gpbLog.SuspendLayout();
             this.pnlStatusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbVisualStatus)).BeginInit();
+            this.gpbMouseOptions.SuspendLayout();
+            this.gpbShortcuts.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // gpbConnectionMethod
@@ -84,6 +102,7 @@
             // rbtnConnectionMethodAutomatic
             // 
             this.rbtnConnectionMethodAutomatic.AutoSize = true;
+            this.rbtnConnectionMethodAutomatic.Enabled = false;
             this.rbtnConnectionMethodAutomatic.Location = new System.Drawing.Point(6, 26);
             this.rbtnConnectionMethodAutomatic.Name = "rbtnConnectionMethodAutomatic";
             this.rbtnConnectionMethodAutomatic.Size = new System.Drawing.Size(99, 24);
@@ -96,6 +115,7 @@
             // rbtnConnectionMethodUDP
             // 
             this.rbtnConnectionMethodUDP.AutoSize = true;
+            this.rbtnConnectionMethodUDP.Enabled = false;
             this.rbtnConnectionMethodUDP.Location = new System.Drawing.Point(6, 86);
             this.rbtnConnectionMethodUDP.Name = "rbtnConnectionMethodUDP";
             this.rbtnConnectionMethodUDP.Size = new System.Drawing.Size(204, 24);
@@ -145,7 +165,7 @@
             this.chbConnectionStatusRefreshConstantly.Size = new System.Drawing.Size(18, 17);
             this.chbConnectionStatusRefreshConstantly.TabIndex = 7;
             this.toolTip.SetToolTip(this.chbConnectionStatusRefreshConstantly, "Live Status\r\nShows the connection strength live as data is being sent and receive" +
-        "d");
+        "d\r\nMay effect overall speed or latency");
             this.chbConnectionStatusRefreshConstantly.UseVisualStyleBackColor = true;
             this.chbConnectionStatusRefreshConstantly.CheckedChanged += new System.EventHandler(this.chbConnectionStatusRefreshConstantly_CheckedChanged);
             // 
@@ -318,10 +338,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gpbLog.Controls.Add(this.txtLog);
-            this.gpbLog.Location = new System.Drawing.Point(300, 12);
+            this.gpbLog.Location = new System.Drawing.Point(590, 12);
             this.gpbLog.Name = "gpbLog";
-            this.gpbLog.Size = new System.Drawing.Size(584, 404);
-            this.gpbLog.TabIndex = 4;
+            this.gpbLog.Size = new System.Drawing.Size(343, 404);
+            this.gpbLog.TabIndex = 5;
             this.gpbLog.TabStop = false;
             this.gpbLog.Text = "Log";
             // 
@@ -337,7 +357,7 @@
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(578, 378);
+            this.txtLog.Size = new System.Drawing.Size(337, 378);
             this.txtLog.TabIndex = 0;
             this.toolTip.SetToolTip(this.txtLog, "Double Click To Stop Showing The Live Log");
             this.txtLog.DoubleClick += new System.EventHandler(this.txtLog_DoubleClick);
@@ -351,13 +371,13 @@
             this.pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlStatusBar.Location = new System.Drawing.Point(0, 422);
             this.pnlStatusBar.Name = "pnlStatusBar";
-            this.pnlStatusBar.Size = new System.Drawing.Size(896, 33);
-            this.pnlStatusBar.TabIndex = 5;
+            this.pnlStatusBar.Size = new System.Drawing.Size(945, 33);
+            this.pnlStatusBar.TabIndex = 6;
             // 
             // btnChangeStatus
             // 
             this.btnChangeStatus.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnChangeStatus.Location = new System.Drawing.Point(766, 0);
+            this.btnChangeStatus.Location = new System.Drawing.Point(815, 0);
             this.btnChangeStatus.Name = "btnChangeStatus";
             this.btnChangeStatus.Size = new System.Drawing.Size(97, 29);
             this.btnChangeStatus.TabIndex = 1;
@@ -368,7 +388,7 @@
             // pbVisualStatus
             // 
             this.pbVisualStatus.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pbVisualStatus.Location = new System.Drawing.Point(863, 0);
+            this.pbVisualStatus.Location = new System.Drawing.Point(912, 0);
             this.pbVisualStatus.Name = "pbVisualStatus";
             this.pbVisualStatus.Size = new System.Drawing.Size(29, 29);
             this.pbVisualStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -402,11 +422,177 @@
             this.UpdateStaus.Interval = 1000;
             this.UpdateStaus.Tick += new System.EventHandler(this.UpdateStaus_Tick);
             // 
+            // gpbMouseOptions
+            // 
+            this.gpbMouseOptions.Controls.Add(this.groupBox1);
+            this.gpbMouseOptions.Controls.Add(this.gpbShortcuts);
+            this.gpbMouseOptions.Controls.Add(this.rbtnInputTypeRHID);
+            this.gpbMouseOptions.Controls.Add(this.rbtnInputTypeIWT);
+            this.gpbMouseOptions.Controls.Add(this.cmbTrackWindowOrDevice);
+            this.gpbMouseOptions.Controls.Add(this.lblTrackWindowOrDevice);
+            this.gpbMouseOptions.Location = new System.Drawing.Point(300, 12);
+            this.gpbMouseOptions.Name = "gpbMouseOptions";
+            this.gpbMouseOptions.Size = new System.Drawing.Size(284, 404);
+            this.gpbMouseOptions.TabIndex = 4;
+            this.gpbMouseOptions.TabStop = false;
+            this.gpbMouseOptions.Text = "Mouse Options";
+            // 
+            // txtSkipPackageCount
+            // 
+            this.txtSkipPackageCount.Location = new System.Drawing.Point(197, 176);
+            this.txtSkipPackageCount.Name = "txtSkipPackageCount";
+            this.txtSkipPackageCount.Size = new System.Drawing.Size(69, 27);
+            this.txtSkipPackageCount.TabIndex = 4;
+            this.txtSkipPackageCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.txtSkipPackageCount, "Skip some amount of packages to decrease internet usage\r\nMay come handy in some c" +
+        "ases");
+            // 
+            // gpbShortcuts
+            // 
+            this.gpbShortcuts.Controls.Add(this.txtFastActionMenuShortcut);
+            this.gpbShortcuts.Controls.Add(this.lblFastActionMenuShortcut);
+            this.gpbShortcuts.Location = new System.Drawing.Point(6, 121);
+            this.gpbShortcuts.Name = "gpbShortcuts";
+            this.gpbShortcuts.Size = new System.Drawing.Size(272, 58);
+            this.gpbShortcuts.TabIndex = 4;
+            this.gpbShortcuts.TabStop = false;
+            this.gpbShortcuts.Text = "Shortcuts";
+            // 
+            // txtFastActionMenuShortcut
+            // 
+            this.txtFastActionMenuShortcut.Location = new System.Drawing.Point(134, 23);
+            this.txtFastActionMenuShortcut.Name = "txtFastActionMenuShortcut";
+            this.txtFastActionMenuShortcut.ReadOnly = true;
+            this.txtFastActionMenuShortcut.Size = new System.Drawing.Size(132, 27);
+            this.txtFastActionMenuShortcut.TabIndex = 1;
+            this.txtFastActionMenuShortcut.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFastActionMenuShortcut.Enter += new System.EventHandler(this.txtFastActionMenuShortcut_Enter);
+            this.txtFastActionMenuShortcut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtFastActionMenuShortcut_KeyDown);
+            // 
+            // lblFastActionMenuShortcut
+            // 
+            this.lblFastActionMenuShortcut.AutoSize = true;
+            this.lblFastActionMenuShortcut.Location = new System.Drawing.Point(6, 26);
+            this.lblFastActionMenuShortcut.Name = "lblFastActionMenuShortcut";
+            this.lblFastActionMenuShortcut.Size = new System.Drawing.Size(122, 20);
+            this.lblFastActionMenuShortcut.TabIndex = 0;
+            this.lblFastActionMenuShortcut.Text = "Fast Action Menu";
+            // 
+            // lblSkipPackageCount
+            // 
+            this.lblSkipPackageCount.AutoSize = true;
+            this.lblSkipPackageCount.Location = new System.Drawing.Point(6, 179);
+            this.lblSkipPackageCount.Name = "lblSkipPackageCount";
+            this.lblSkipPackageCount.Size = new System.Drawing.Size(138, 20);
+            this.lblSkipPackageCount.TabIndex = 3;
+            this.lblSkipPackageCount.Text = "Skip Package Count";
+            // 
+            // rbtnInputTypeRHID
+            // 
+            this.rbtnInputTypeRHID.AutoSize = true;
+            this.rbtnInputTypeRHID.Enabled = false;
+            this.rbtnInputTypeRHID.Location = new System.Drawing.Point(171, 26);
+            this.rbtnInputTypeRHID.Name = "rbtnInputTypeRHID";
+            this.rbtnInputTypeRHID.Size = new System.Drawing.Size(107, 24);
+            this.rbtnInputTypeRHID.TabIndex = 1;
+            this.rbtnInputTypeRHID.TabStop = true;
+            this.rbtnInputTypeRHID.Text = "Record HID";
+            this.rbtnInputTypeRHID.UseVisualStyleBackColor = true;
+            // 
+            // rbtnInputTypeIWT
+            // 
+            this.rbtnInputTypeIWT.AutoSize = true;
+            this.rbtnInputTypeIWT.Location = new System.Drawing.Point(6, 26);
+            this.rbtnInputTypeIWT.Name = "rbtnInputTypeIWT";
+            this.rbtnInputTypeIWT.Size = new System.Drawing.Size(160, 24);
+            this.rbtnInputTypeIWT.TabIndex = 0;
+            this.rbtnInputTypeIWT.TabStop = true;
+            this.rbtnInputTypeIWT.Text = "In Window Tracking";
+            this.rbtnInputTypeIWT.UseVisualStyleBackColor = true;
+            this.rbtnInputTypeIWT.CheckedChanged += new System.EventHandler(this.rbtnInputTypeIWT_CheckedChanged);
+            // 
+            // cmbTrackWindowOrDevice
+            // 
+            this.cmbTrackWindowOrDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTrackWindowOrDevice.Enabled = false;
+            this.cmbTrackWindowOrDevice.FormattingEnabled = true;
+            this.cmbTrackWindowOrDevice.Location = new System.Drawing.Point(6, 87);
+            this.cmbTrackWindowOrDevice.Name = "cmbTrackWindowOrDevice";
+            this.cmbTrackWindowOrDevice.Size = new System.Drawing.Size(272, 28);
+            this.cmbTrackWindowOrDevice.TabIndex = 3;
+            this.cmbTrackWindowOrDevice.DropDown += new System.EventHandler(this.cmbTrackWindowOrDevice_DropDown);
+            this.cmbTrackWindowOrDevice.SelectedIndexChanged += new System.EventHandler(this.cmbTrackWindowOrDevice_SelectedIndexChanged);
+            // 
+            // lblTrackWindowOrDevice
+            // 
+            this.lblTrackWindowOrDevice.AutoSize = true;
+            this.lblTrackWindowOrDevice.Location = new System.Drawing.Point(6, 64);
+            this.lblTrackWindowOrDevice.Name = "lblTrackWindowOrDevice";
+            this.lblTrackWindowOrDevice.Size = new System.Drawing.Size(114, 20);
+            this.lblTrackWindowOrDevice.TabIndex = 2;
+            this.lblTrackWindowOrDevice.Text = "Track Mouse In :";
+            // 
+            // CheckOverlay
+            // 
+            this.CheckOverlay.Tick += new System.EventHandler(this.CheckOverlay_Tick);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.chbCompressData);
+            this.groupBox1.Controls.Add(this.chbRequestCursorType);
+            this.groupBox1.Controls.Add(this.chbSendCursorFinalPosition);
+            this.groupBox1.Controls.Add(this.lblSkipPackageCount);
+            this.groupBox1.Controls.Add(this.txtSkipPackageCount);
+            this.groupBox1.Enabled = false;
+            this.groupBox1.Location = new System.Drawing.Point(6, 185);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(272, 213);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Optional Upgrades";
+            // 
+            // chbSendCursorFinalPosition
+            // 
+            this.chbSendCursorFinalPosition.AutoSize = true;
+            this.chbSendCursorFinalPosition.Location = new System.Drawing.Point(6, 30);
+            this.chbSendCursorFinalPosition.Name = "chbSendCursorFinalPosition";
+            this.chbSendCursorFinalPosition.Size = new System.Drawing.Size(201, 24);
+            this.chbSendCursorFinalPosition.TabIndex = 0;
+            this.chbSendCursorFinalPosition.Text = "Send Cursor Final Position";
+            this.toolTip.SetToolTip(this.chbSendCursorFinalPosition, "Sends cursors exact location for better accuracy\r\nReduceses data size and may add" +
+        " latency");
+            this.chbSendCursorFinalPosition.UseVisualStyleBackColor = true;
+            // 
+            // chbRequestCursorType
+            // 
+            this.chbRequestCursorType.AutoSize = true;
+            this.chbRequestCursorType.Location = new System.Drawing.Point(6, 60);
+            this.chbRequestCursorType.Name = "chbRequestCursorType";
+            this.chbRequestCursorType.Size = new System.Drawing.Size(165, 24);
+            this.chbRequestCursorType.TabIndex = 1;
+            this.chbRequestCursorType.Text = "Request Cursor Type";
+            this.toolTip.SetToolTip(this.chbRequestCursorType, "Send Request to server for the pointers Type(Arrow, Cross, WaitCursor, . . .)\r\nMa" +
+        "y effect latency");
+            this.chbRequestCursorType.UseVisualStyleBackColor = true;
+            // 
+            // chbCompressData
+            // 
+            this.chbCompressData.AutoSize = true;
+            this.chbCompressData.Location = new System.Drawing.Point(6, 90);
+            this.chbCompressData.Name = "chbCompressData";
+            this.chbCompressData.Size = new System.Drawing.Size(132, 24);
+            this.chbCompressData.TabIndex = 2;
+            this.chbCompressData.Text = "Compress Data";
+            this.toolTip.SetToolTip(this.chbCompressData, "Compress the data before sending and decompress after reciving\r\nMay reduce CPU us" +
+        "age, Mostly on client");
+            this.chbCompressData.UseVisualStyleBackColor = true;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 455);
+            this.ClientSize = new System.Drawing.Size(945, 455);
+            this.Controls.Add(this.gpbMouseOptions);
             this.Controls.Add(this.pnlStatusBar);
             this.Controls.Add(this.gpbLog);
             this.Controls.Add(this.gpbConnectionSpecifications);
@@ -415,7 +601,6 @@
             this.Controls.Add(this.gpbConnectionMethod);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "frm_Main";
             this.Text = "RDP Relative Mouse";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_Main_FormClosing);
@@ -432,6 +617,12 @@
             this.pnlStatusBar.ResumeLayout(false);
             this.pnlStatusBar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbVisualStatus)).EndInit();
+            this.gpbMouseOptions.ResumeLayout(false);
+            this.gpbMouseOptions.PerformLayout();
+            this.gpbShortcuts.ResumeLayout(false);
+            this.gpbShortcuts.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -468,5 +659,20 @@
         private System.Windows.Forms.Timer LogChecker;
         private ToolTip toolTip;
         private System.Windows.Forms.Timer UpdateStaus;
+        private GroupBox gpbMouseOptions;
+        private Label lblTrackWindowOrDevice;
+        private ComboBox cmbTrackWindowOrDevice;
+        private RadioButton rbtnInputTypeRHID;
+        private RadioButton rbtnInputTypeIWT;
+        private Label lblSkipPackageCount;
+        private GroupBox gpbShortcuts;
+        private TextBox txtFastActionMenuShortcut;
+        private Label lblFastActionMenuShortcut;
+        private TextBox txtSkipPackageCount;
+        private System.Windows.Forms.Timer CheckOverlay;
+        private GroupBox groupBox1;
+        private CheckBox chbRequestCursorType;
+        private CheckBox chbSendCursorFinalPosition;
+        private CheckBox chbCompressData;
     }
 }

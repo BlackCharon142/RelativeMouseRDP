@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
     <PackageReference Include="NetCoreServer" Version="6.2.0" />
+    <PackageReference Include="WindowsHook" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,161 @@
+﻿namespace RelativeMouseRDP
+{
+    partial class frm_Overlay
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.cmsFunctions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiSendMenuShortcut = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiDisableOverlay = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiHideCursor = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiGameMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.pbRecordingIndicator = new System.Windows.Forms.PictureBox();
+            this.RecorderCheck = new System.Windows.Forms.Timer(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmsFunctions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbRecordingIndicator)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // cmsFunctions
+            // 
+            this.cmsFunctions.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.cmsFunctions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiSendMenuShortcut,
+            this.toolStripSeparator1,
+            this.tsmiDisableOverlay,
+            this.tsmiHideCursor,
+            this.tsmiGameMode});
+            this.cmsFunctions.Name = "cmsFunctions";
+            this.cmsFunctions.Size = new System.Drawing.Size(215, 142);
+            // 
+            // tsmiSendMenuShortcut
+            // 
+            this.tsmiSendMenuShortcut.Image = global::RelativeMouseRDP.Properties.Resources.enter_mac_key_48px;
+            this.tsmiSendMenuShortcut.Name = "tsmiSendMenuShortcut";
+            this.tsmiSendMenuShortcut.Size = new System.Drawing.Size(214, 26);
+            this.tsmiSendMenuShortcut.Text = "Send ";
+            this.tsmiSendMenuShortcut.Click += new System.EventHandler(this.tsmiSendMenuShortcut_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(211, 6);
+            // 
+            // tsmiDisableOverlay
+            // 
+            this.tsmiDisableOverlay.CheckOnClick = true;
+            this.tsmiDisableOverlay.Image = global::RelativeMouseRDP.Properties.Resources.hide_48px;
+            this.tsmiDisableOverlay.Name = "tsmiDisableOverlay";
+            this.tsmiDisableOverlay.Size = new System.Drawing.Size(214, 26);
+            this.tsmiDisableOverlay.Text = "Disable Overlay";
+            this.tsmiDisableOverlay.Click += new System.EventHandler(this.tsmiDisableOverlay_Click);
+            // 
+            // tsmiHideCursor
+            // 
+            this.tsmiHideCursor.CheckOnClick = true;
+            this.tsmiHideCursor.Image = global::RelativeMouseRDP.Properties.Resources.cursor_48px;
+            this.tsmiHideCursor.Name = "tsmiHideCursor";
+            this.tsmiHideCursor.Size = new System.Drawing.Size(214, 26);
+            this.tsmiHideCursor.Text = "Hide Cursor";
+            this.tsmiHideCursor.Click += new System.EventHandler(this.tsmiHideCursor_Click);
+            // 
+            // tsmiGameMode
+            // 
+            this.tsmiGameMode.CheckOnClick = true;
+            this.tsmiGameMode.Image = global::RelativeMouseRDP.Properties.Resources.game_controller_96px;
+            this.tsmiGameMode.Name = "tsmiGameMode";
+            this.tsmiGameMode.Size = new System.Drawing.Size(214, 26);
+            this.tsmiGameMode.Text = "Game Mode";
+            // 
+            // pbRecordingIndicator
+            // 
+            this.pbRecordingIndicator.Location = new System.Drawing.Point(12, 12);
+            this.pbRecordingIndicator.Name = "pbRecordingIndicator";
+            this.pbRecordingIndicator.Size = new System.Drawing.Size(30, 30);
+            this.pbRecordingIndicator.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbRecordingIndicator.TabIndex = 1;
+            this.pbRecordingIndicator.TabStop = false;
+            // 
+            // RecorderCheck
+            // 
+            this.RecorderCheck.Enabled = true;
+            this.RecorderCheck.Interval = 1;
+            this.RecorderCheck.Tick += new System.EventHandler(this.RecorderCheck_Tick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.Location = new System.Drawing.Point(14, 63);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(50, 20);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "label1";
+            // 
+            // frm_Overlay
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.AliceBlue;
+            this.ClientSize = new System.Drawing.Size(100, 100);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pbRecordingIndicator);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
+            this.Name = "frm_Overlay";
+            this.ShowInTaskbar = false;
+            this.Text = "Overlay";
+            this.TopMost = true;
+            this.TransparencyKey = System.Drawing.Color.AliceBlue;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_Overlay_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frm_Overlay_KeyDown);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frm_Overlay_MouseDown);
+            this.MouseEnter += new System.EventHandler(this.frm_Overlay_MouseEnter);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frm_Overlay_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frm_Overlay_MouseUp);
+            this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.frm_Overlay_MouseWheel);
+            this.cmsFunctions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbRecordingIndicator)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+        private ContextMenuStrip cmsFunctions;
+        private ToolStripMenuItem tsmiDisableOverlay;
+        private ToolStripMenuItem tsmiHideCursor;
+        private ToolStripMenuItem tsmiSendMenuShortcut;
+        private PictureBox pbRecordingIndicator;
+        private System.Windows.Forms.Timer RecorderCheck;
+        private Label label1;
+        private ToolStripMenuItem tsmiGameMode;
+        private ToolStripSeparator toolStripSeparator1;
+    }
+}

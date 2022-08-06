@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -30,7 +32,84 @@ namespace RelativeMouseRDP
             }
         }
 
-        #region Validations
+        #region Timers
+
+        private void LogChecker_Tick(object sender, EventArgs e)
+        {
+            if (showLiveLog)
+            {
+                if (txtLog.Text != Log.ReadCurrentLog())
+                    txtLog.Text = Log.ReadCurrentLog();
+
+                txtLog.SelectionStart = txtLog.Text.Length;
+                txtLog.ScrollToCaret();
+            }
+        }
+
+        private void UpdateStaus_Tick(object sender, EventArgs e)
+        {
+            string defaultStatusText = "Status : ";
+            lblStatus.Text = defaultStatusText + (EstablishConnection.GetServerStatus() ? "Online" : "Offline");
+
+            ChangeVisualStatus(EstablishConnection.GetServerStatus());
+
+            toolTip.SetToolTip(pbVisualStatus, lblStatus.Text);
+
+            btnChangeStatus.Text = (EstablishConnection.GetServerStatus() ? "Stop" : "Start");
+        }
+
+        private void CheckOverlay_Tick(object sender, EventArgs e)
+        {
+            //if (CursorInfo.GetCursorType() != null)
+            //    lblSkipPackageCount.Text = CursorInfo.GetCursorType().ID.ToString() + " : " + CursorInfo.GetCursorType().Handle.ToString();
+
+            //lblSkipPackageCount.Text = LastInputInfo.GetLastInputTime().ToString();
+
+            if (!OverlaySettings.Exist())
+                OverlaySettings.MakeOverlay();
+
+            if (Window.IsOverlayOnTop() || Window.IsTargetWindowSelected())
+            {
+                OverlaySettings.DrawOverWindowsRect(Window.targetWindow.Id);
+                OverlaySettings.EnableOverlay();
+            }
+            else
+            {
+                OverlaySettings.DisableOverlay();
+            }
+        }
+
+        #endregion
+
+        #region Set Device Position
+
+        private void rbtnDevicePositionClient_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnDevicePositionClient.Checked)
+            {
+                if (EstablishConnection.SetPosition(Positions.Client))
+                {
+                    gpbConnectionSpecifications.Enabled = true;
+                    Log.Register("Device Position Set to " + rbtnDevicePositionClient.Text);
+                }
+            }
+        }
+
+        private void rbtnDevicePositionServer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnDevicePositionServer.Checked)
+            {
+                if (EstablishConnection.SetPosition(Positions.Server))
+                {
+                    gpbConnectionSpecifications.Enabled = true;
+                    Log.Register("Device Position Set to " + rbtnDevicePositionServer.Text);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Connection Specifications & Validations
 
         #region Key Presses
 
@@ -100,62 +179,6 @@ namespace RelativeMouseRDP
 
         #endregion
 
-        #region Timers
-
-        private void LogChecker_Tick(object sender, EventArgs e)
-        {
-            if (showLiveLog)
-            {
-                if (txtLog.Text != Log.ReadCurrentLog())
-                    txtLog.Text = Log.ReadCurrentLog();
-
-                txtLog.SelectionStart = txtLog.Text.Length;
-                txtLog.ScrollToCaret();
-            }
-        }
-
-        private void UpdateStaus_Tick(object sender, EventArgs e)
-        {
-            string defaultStatusText = "Status : ";
-            lblStatus.Text = defaultStatusText + (EstablishConnection.GetServerStatus() ? "Online" : "Offline");
-
-            ChangeVisualStatus(EstablishConnection.GetServerStatus());
-
-            toolTip.SetToolTip(pbVisualStatus, lblStatus.Text);
-
-            btnChangeStatus.Text = (EstablishConnection.GetServerStatus() ? "Stop" : "Start");
-        }
-
-        #endregion
-
-        #region Set Device Position
-
-        private void rbtnDevicePositionClient_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnDevicePositionClient.Checked)
-            {
-                if (EstablishConnection.SetPosition(Positions.Client))
-                {
-                    gpbConnectionSpecifications.Enabled = true;
-                    Log.Register("Device Position Set to " + rbtnDevicePositionClient.Text);
-                }
-            }
-        }
-
-        private void rbtnDevicePositionServer_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnDevicePositionServer.Checked)
-            {
-                if (EstablishConnection.SetPosition(Positions.Server))
-                {
-                    gpbConnectionSpecifications.Enabled = true;
-                    Log.Register("Device Position Set to " + rbtnDevicePositionServer.Text);
-                }
-            }
-        }
-
-        #endregion
-
         #region Set Connection Method
 
         private void rbtnConnectionMethodAutomatic_CheckedChanged(object sender, EventArgs e)
@@ -204,6 +227,65 @@ namespace RelativeMouseRDP
 
             btnConnectionStatusRefresh.Enabled = !chbConnectionStatusRefreshConstantly.Checked;
         }
+
+        #endregion
+
+        #region Mouse Options
+
+        private void rbtnInputTypeIWT_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnInputTypeIWT.Checked)
+            {
+                CheckOverlay.Start();
+                txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(GlobalShortcut.ShortcutFastActionMenu);
+                cmbTrackWindowOrDevice.Enabled = true;
+            }
+            else
+            {
+                CheckOverlay.Stop();
+                OverlaySettings.CloseOverlay();
+                txtFastActionMenuShortcut.Text = "";
+                cmbTrackWindowOrDevice.Enabled = false;
+            }
+        }
+
+        private void cmbTrackWindowOrDevice_DropDown(object sender, EventArgs e)
+        {
+            int previousSelectedValue = 0;
+            if (cmbTrackWindowOrDevice.SelectedIndex > 0)
+                previousSelectedValue = Convert.ToInt32(cmbTrackWindowOrDevice.SelectedValue);
+
+            cmbTrackWindowOrDevice.DataSource = Window.GetOpenWindows();
+
+            cmbTrackWindowOrDevice.ValueMember = "ID";
+            cmbTrackWindowOrDevice.DisplayMember = "WindowName";
+
+            if (cmbTrackWindowOrDevice.SelectedIndex > 0)
+                cmbTrackWindowOrDevice.SelectedValue = previousSelectedValue;
+        }
+
+        private void cmbTrackWindowOrDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbTrackWindowOrDevice.SelectedIndex > 0)
+            {
+                Window.targetWindow = Process.GetProcessById(Convert.ToInt32(cmbTrackWindowOrDevice.SelectedValue));
+            }
+        }
+
+        #region Set Fast Action Shortcut
+
+        private void txtFastActionMenuShortcut_Enter(object sender, EventArgs e)
+        {
+            txtFastActionMenuShortcut.Text = "Enter Shortcut ...";
+        }
+
+        private void txtFastActionMenuShortcut_KeyDown(object sender, KeyEventArgs e)
+        {
+            txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(e.KeyData);
+            GlobalShortcut.ShortcutFastActionMenu = e.KeyData;
+        }
+
+        #endregion
 
         #endregion
 
