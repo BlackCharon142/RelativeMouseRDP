@@ -31,7 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.cmsFunctions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiSendMenuShortcut = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiSendCtrlAltDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiDisableOverlay = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiHideCursor = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiGameMode = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,32 +48,42 @@
             this.cmsFunctions.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cmsFunctions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSendMenuShortcut,
-            this.toolStripSeparator1,
+            this.tsmiSendCtrlAltDelete,
+            this.tss1,
             this.tsmiDisableOverlay,
             this.tsmiHideCursor,
             this.tsmiGameMode});
             this.cmsFunctions.Name = "cmsFunctions";
-            this.cmsFunctions.Size = new System.Drawing.Size(215, 142);
+            this.cmsFunctions.Size = new System.Drawing.Size(242, 140);
+            this.cmsFunctions.Opening += new System.ComponentModel.CancelEventHandler(this.cmsFunctions_Opening);
             // 
             // tsmiSendMenuShortcut
             // 
             this.tsmiSendMenuShortcut.Image = global::RelativeMouseRDP.Properties.Resources.enter_mac_key_48px;
             this.tsmiSendMenuShortcut.Name = "tsmiSendMenuShortcut";
-            this.tsmiSendMenuShortcut.Size = new System.Drawing.Size(214, 26);
+            this.tsmiSendMenuShortcut.Size = new System.Drawing.Size(241, 26);
             this.tsmiSendMenuShortcut.Text = "Send ";
             this.tsmiSendMenuShortcut.Click += new System.EventHandler(this.tsmiSendMenuShortcut_Click);
             // 
-            // toolStripSeparator1
+            // tsmiSendCtrlAltDelete
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(211, 6);
+            this.tsmiSendCtrlAltDelete.Image = global::RelativeMouseRDP.Properties.Resources.Bullet_List_60px;
+            this.tsmiSendCtrlAltDelete.Name = "tsmiSendCtrlAltDelete";
+            this.tsmiSendCtrlAltDelete.Size = new System.Drawing.Size(241, 26);
+            this.tsmiSendCtrlAltDelete.Text = "Send Ctrl + Alt + Delete";
+            this.tsmiSendCtrlAltDelete.Click += new System.EventHandler(this.tsmiSendCtrlAltDelete_Click);
+            // 
+            // tss1
+            // 
+            this.tss1.Name = "tss1";
+            this.tss1.Size = new System.Drawing.Size(238, 6);
             // 
             // tsmiDisableOverlay
             // 
             this.tsmiDisableOverlay.CheckOnClick = true;
             this.tsmiDisableOverlay.Image = global::RelativeMouseRDP.Properties.Resources.hide_48px;
             this.tsmiDisableOverlay.Name = "tsmiDisableOverlay";
-            this.tsmiDisableOverlay.Size = new System.Drawing.Size(214, 26);
+            this.tsmiDisableOverlay.Size = new System.Drawing.Size(241, 26);
             this.tsmiDisableOverlay.Text = "Disable Overlay";
             this.tsmiDisableOverlay.Click += new System.EventHandler(this.tsmiDisableOverlay_Click);
             // 
@@ -81,7 +92,7 @@
             this.tsmiHideCursor.CheckOnClick = true;
             this.tsmiHideCursor.Image = global::RelativeMouseRDP.Properties.Resources.cursor_48px;
             this.tsmiHideCursor.Name = "tsmiHideCursor";
-            this.tsmiHideCursor.Size = new System.Drawing.Size(214, 26);
+            this.tsmiHideCursor.Size = new System.Drawing.Size(241, 26);
             this.tsmiHideCursor.Text = "Hide Cursor";
             this.tsmiHideCursor.Click += new System.EventHandler(this.tsmiHideCursor_Click);
             // 
@@ -90,7 +101,7 @@
             this.tsmiGameMode.CheckOnClick = true;
             this.tsmiGameMode.Image = global::RelativeMouseRDP.Properties.Resources.game_controller_96px;
             this.tsmiGameMode.Name = "tsmiGameMode";
-            this.tsmiGameMode.Size = new System.Drawing.Size(214, 26);
+            this.tsmiGameMode.Size = new System.Drawing.Size(241, 26);
             this.tsmiGameMode.Text = "Game Mode";
             // 
             // pbRecordingIndicator
@@ -134,7 +145,6 @@
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.AliceBlue;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_Overlay_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frm_Overlay_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frm_Overlay_MouseDown);
             this.MouseEnter += new System.EventHandler(this.frm_Overlay_MouseEnter);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frm_Overlay_MouseMove);
@@ -156,6 +166,7 @@
         private System.Windows.Forms.Timer RecorderCheck;
         private Label label1;
         private ToolStripMenuItem tsmiGameMode;
-        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator tss1;
+        private ToolStripMenuItem tsmiSendCtrlAltDelete;
     }
 }

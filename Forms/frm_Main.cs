@@ -60,11 +60,6 @@ namespace RelativeMouseRDP
 
         private void CheckOverlay_Tick(object sender, EventArgs e)
         {
-            //if (CursorInfo.GetCursorType() != null)
-            //    lblSkipPackageCount.Text = CursorInfo.GetCursorType().ID.ToString() + " : " + CursorInfo.GetCursorType().Handle.ToString();
-
-            //lblSkipPackageCount.Text = LastInputInfo.GetLastInputTime().ToString();
-
             if (!OverlaySettings.Exist())
                 OverlaySettings.MakeOverlay();
 
@@ -72,10 +67,12 @@ namespace RelativeMouseRDP
             {
                 OverlaySettings.DrawOverWindowsRect(Window.targetWindow.Id);
                 OverlaySettings.EnableOverlay();
+                KeyEventHandler.IgnoreKeys = false;
             }
             else
             {
                 OverlaySettings.DisableOverlay();
+                KeyEventHandler.IgnoreKeys = true;
             }
         }
 
@@ -237,7 +234,7 @@ namespace RelativeMouseRDP
             if (rbtnInputTypeIWT.Checked)
             {
                 CheckOverlay.Start();
-                txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(GlobalShortcut.ShortcutFastActionMenu);
+                txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(KeyEventHandler.ShortcutFastActionMenu);
                 cmbTrackWindowOrDevice.Enabled = true;
             }
             else
@@ -282,7 +279,7 @@ namespace RelativeMouseRDP
         private void txtFastActionMenuShortcut_KeyDown(object sender, KeyEventArgs e)
         {
             txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(e.KeyData);
-            GlobalShortcut.ShortcutFastActionMenu = e.KeyData;
+            KeyEventHandler.ShortcutFastActionMenu = new ShortcutKeys(e.Control,e.Alt,e.Shift,e.KeyCode);
         }
 
         #endregion

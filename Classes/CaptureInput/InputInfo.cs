@@ -330,6 +330,7 @@ namespace RelativeMouseRDP
 
         public static MouseButtons DownButton { get; private set; }
         public static MouseButtons UpButton { get; private set; }
+        public static int MouseWheelDelta { get; private set; }
 
         public static int CursorPositionX { get; private set; }
         public static int CursorPositionY { get; private set; }
@@ -401,6 +402,11 @@ namespace RelativeMouseRDP
         {
             CursorDeltaX = delta.X;
             CursorDeltaY = delta.Y;
+        }
+
+        public static void SetWheelDelta(int delta)
+        {
+            MouseWheelDelta = delta;
         }
 
         public static void Options(bool requestCursorState, bool notifySpeedTest, bool notifyCompression)

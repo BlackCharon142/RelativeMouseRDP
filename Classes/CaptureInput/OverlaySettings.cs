@@ -66,6 +66,16 @@ namespace RelativeMouseRDP
             overlay.Focus();
         }
 
+        public static void EnableOverlayRemporaryDisable()
+        {
+            overlay.WindowState = FormWindowState.Minimized;
+        }
+
+        public static void DisableOverlayRemporaryDisable()
+        {
+            overlay.WindowState = FormWindowState.Normal;
+        }
+
         public static void OpenOverlayFastActionMenu()
         {
             if (Exist())

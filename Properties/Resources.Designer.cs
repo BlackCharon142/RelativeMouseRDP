@@ -63,6 +63,16 @@ namespace RelativeMouseRDP.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Bullet_List_60px {
+            get {
+                object obj = ResourceManager.GetObject("Bullet List_60px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cursor_48px {
             get {
                 object obj = ResourceManager.GetObject("cursor_48px", resourceCulture);

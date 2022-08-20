@@ -124,13 +124,16 @@
   <data name="refresh_32px" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\refresh_32px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="game_controller_96px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\game_controller_96px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="cursor_48px" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cursor_48px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="enter_mac_key_48px" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\enter_mac_key_48px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="game_controller_96px" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\game_controller_96px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Bullet List_60px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bullet List_60px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

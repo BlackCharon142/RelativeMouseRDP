@@ -19,14 +19,14 @@ namespace RelativeMouseRDP
         public frm_Overlay()
         {
             InitializeComponent();
-            GlobalShortcut.StartHook();
+            KeyEventHandler.StartHook();
         }
 
         #region Form Methods
 
         private void frm_Overlay_FormClosing(object sender, FormClosingEventArgs e)
         {
-            GlobalShortcut.StopHook();
+            KeyEventHandler.StopHook();
         }
 
         private void frm_Overlay_MouseEnter(object sender, EventArgs e)
@@ -41,17 +41,29 @@ namespace RelativeMouseRDP
 
         #region Fast Action Menu Items
 
+        private void cmsFunctions_Opening(object sender, CancelEventArgs e)
+        {
+            tsmiSendMenuShortcut.Text = "Send " + new KeysConverter().ConvertToInvariantString(KeyEventHandler.ShortcutFastActionMenu.GetKeys());
+        }
+
         private void tsmiSendMenuShortcut_Click(object sender, EventArgs e)
         {
+            InputData.DownEvent(KeyEventHandler.ShortcutFastActionMenu.GetKeys());
+            InputData.UpEvent(KeyEventHandler.ShortcutFastActionMenu.GetKeys());
+        }
 
+        private void tsmiSendCtrlAltDelete_Click(object sender, EventArgs e)
+        {
+            InputData.DownEvent(Keys.Delete | Keys.Alt | Keys.Control);
+            InputData.UpEvent(Keys.Delete | Keys.Alt | Keys.Control);
         }
 
         private void tsmiDisableOverlay_Click(object sender, EventArgs e)
         {
-            if (true)
-            {
-
-            }
+            if (tsmiDisableOverlay.Checked)
+                OverlaySettings.EnableOverlayRemporaryDisable();
+            else
+                OverlaySettings.DisableOverlayRemporaryDisable();
         }
 
         private void tsmiHideCursor_Click(object sender, EventArgs e)
@@ -81,7 +93,7 @@ namespace RelativeMouseRDP
         public void OpenFastActionMenu()
         {
             Cursor.Clip = new Rectangle();
-            tsmiSendMenuShortcut.Text = "Send " + new KeysConverter().ConvertToInvariantString(GlobalShortcut.ShortcutFastActionMenu);
+            tsmiSendMenuShortcut.Text = "Send " + new KeysConverter().ConvertToInvariantString(KeyEventHandler.ShortcutFastActionMenu);
             cmsFunctions.Show(Cursor.Position.X, Cursor.Position.Y);
         }
 
@@ -131,14 +143,13 @@ namespace RelativeMouseRDP
         private void frm_Overlay_MouseDown(object sender, MouseEventArgs e)
         {
             InputData.DownEvent(e.Button);
-            label1.Text = e.Button.ToString() + e.Clicks;
         }
 
         private void frm_Overlay_MouseMove(object sender, MouseEventArgs e)
         {
             if (tsmiGameMode.Checked)
             {
-                Point currentCursorPosition = new Point(e.X - (this.Bounds.Width / 2)/* + 9*/, e.Y - (this.Bounds.Height / 2) /*+ 38*/);
+                Point currentCursorPosition = new Point(e.X - (this.Bounds.Width / 2), e.Y - (this.Bounds.Height / 2));
 
                 if (currentCursorPosition.X < -50 || currentCursorPosition.X > +50 || currentCursorPosition.Y < -50 || currentCursorPosition.Y > 50)
                 {
@@ -184,10 +195,6 @@ namespace RelativeMouseRDP
 
                     InputData.Delta(new Point(X, Y));
                     InputData.Position(e.Location);
-
-                    //radioButton1.Left += X;
-                    //radioButton1.Top += Y;
-                    //label1.Text = "X=" + X + ";Y=" + Y;
                 }
             }
             else
@@ -197,35 +204,26 @@ namespace RelativeMouseRDP
                 if (mousePos == lastCursorPosition)
                     return;
 
-                //int deltaX = (mousePos.X - lastCursorPosition.X);
-                //int deltaY = (mousePos.Y - lastCursorPosition.Y);
-
                 lastCursorPosition = MousePosition;
 
                 pbRecordingIndicator.Left += (mousePos.X - lastCursorPosition.X);
                 pbRecordingIndicator.Top += (mousePos.Y - lastCursorPosition.Y);
 
-
-                //label1.Text = "X: " + deltaX.ToString() + " Y: " + deltaY.ToString() + "\r\n" + pbRecordingIndicator.Location.ToString();
+                InputData.Delta(new Point((mousePos.X - lastCursorPosition.X), (mousePos.Y - lastCursorPosition.Y)));
+                InputData.Position(e.Location);
             }
         }
 
         private void frm_Overlay_MouseUp(object sender, MouseEventArgs e)
         {
-
+            InputData.UpEvent(e.Button);
         }
 
         private void frm_Overlay_MouseWheel(object sender, MouseEventArgs e)
         {
-            label1.Text = e.Delta.ToString();
-        }
-
-        private void frm_Overlay_KeyDown(object sender, KeyEventArgs e)
-        {
-            label1.Text = e.KeyData.ToString();
+            InputData.SetWheelDelta(e.Delta);
         }
 
         #endregion
-
     }
 }
