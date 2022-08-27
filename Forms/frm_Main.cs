@@ -87,6 +87,7 @@ namespace RelativeMouseRDP
                 if (EstablishConnection.SetPosition(Positions.Client))
                 {
                     gpbConnectionSpecifications.Enabled = true;
+                    gpbMouseOptions.Enabled = true;
                     Log.Register("Device Position Set to " + rbtnDevicePositionClient.Text);
                 }
             }
@@ -99,6 +100,7 @@ namespace RelativeMouseRDP
                 if (EstablishConnection.SetPosition(Positions.Server))
                 {
                     gpbConnectionSpecifications.Enabled = true;
+                    gpbMouseOptions.Enabled = false;
                     Log.Register("Device Position Set to " + rbtnDevicePositionServer.Text);
                 }
             }
@@ -222,6 +224,8 @@ namespace RelativeMouseRDP
             else
                 Log.Register("Connection Status Live Update Disabled");
 
+            InputData.Options(chbSendCursorFinalPosition.Checked, chbRequestCursorType.Checked, chbConnectionStatusRefreshConstantly.Checked, chbCompressData.Checked);
+
             btnConnectionStatusRefresh.Enabled = !chbConnectionStatusRefreshConstantly.Checked;
         }
 
@@ -229,57 +233,114 @@ namespace RelativeMouseRDP
 
         #region Mouse Options
 
+        #region Input Type
+
         private void rbtnInputTypeIWT_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnInputTypeIWT.Checked)
             {
+                Log.Register($"Changing Input Type to {rbtnInputTypeIWT.Text}");
                 CheckOverlay.Start();
-                txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(KeyEventHandler.ShortcutFastActionMenu);
                 cmbTrackWindowOrDevice.Enabled = true;
+                txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(KeyEventHandler.ShortcutFastActionMenu.GetKeys());
+                gpbShortcuts.Enabled = true;
+                gpbOptionalUpgrades.Enabled = true;
+                Log.Register($"Input Type Set to {rbtnInputTypeIWT.Text}");
             }
             else
             {
+                Log.Register($"Changing Input Type From {rbtnInputTypeIWT.Text}");
                 CheckOverlay.Stop();
                 OverlaySettings.CloseOverlay();
-                txtFastActionMenuShortcut.Text = "";
                 cmbTrackWindowOrDevice.Enabled = false;
+                txtFastActionMenuShortcut.Text = "";
+                gpbShortcuts.Enabled = false;
+                gpbOptionalUpgrades.Enabled = false;
             }
         }
 
+        #endregion
+
+        #region Windows / Devices DropDown
+
         private void cmbTrackWindowOrDevice_DropDown(object sender, EventArgs e)
         {
-            int previousSelectedValue = 0;
-            if (cmbTrackWindowOrDevice.SelectedIndex > 0)
-                previousSelectedValue = Convert.ToInt32(cmbTrackWindowOrDevice.SelectedValue);
+            if (rbtnInputTypeIWT.Checked)
+            {
+                Log.Register("Refreshing Open Windows List");
 
-            cmbTrackWindowOrDevice.DataSource = Window.GetOpenWindows();
+                int previousSelectedValue = 0;
+                if (cmbTrackWindowOrDevice.SelectedIndex > 0)
+                    previousSelectedValue = Convert.ToInt32(cmbTrackWindowOrDevice.SelectedValue);
 
-            cmbTrackWindowOrDevice.ValueMember = "ID";
-            cmbTrackWindowOrDevice.DisplayMember = "WindowName";
+                cmbTrackWindowOrDevice.DataSource = Window.GetOpenWindows();
 
-            if (cmbTrackWindowOrDevice.SelectedIndex > 0)
-                cmbTrackWindowOrDevice.SelectedValue = previousSelectedValue;
+                cmbTrackWindowOrDevice.ValueMember = "ID";
+                cmbTrackWindowOrDevice.DisplayMember = "WindowName";
+
+                if (cmbTrackWindowOrDevice.SelectedIndex > 0)
+                    cmbTrackWindowOrDevice.SelectedValue = previousSelectedValue;
+
+                Log.Register("Open Windows List Refreshed");
+            }
         }
 
         private void cmbTrackWindowOrDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbTrackWindowOrDevice.SelectedIndex > 0)
             {
-                Window.targetWindow = Process.GetProcessById(Convert.ToInt32(cmbTrackWindowOrDevice.SelectedValue));
+                if (rbtnInputTypeIWT.Checked)
+                {
+                    Window.targetWindow = Process.GetProcessById(Convert.ToInt32(cmbTrackWindowOrDevice.SelectedValue));
+                    Log.Register($"\"{cmbTrackWindowOrDevice.Text}\" Was Selected For {rbtnInputTypeIWT.Text}");
+                }
             }
         }
+
+        #endregion
 
         #region Set Fast Action Shortcut
 
         private void txtFastActionMenuShortcut_Enter(object sender, EventArgs e)
         {
+            Log.Register($"Changing {lblFastActionMenuShortcut.Text} Shortcut Began");
             txtFastActionMenuShortcut.Text = "Enter Shortcut ...";
         }
 
         private void txtFastActionMenuShortcut_KeyDown(object sender, KeyEventArgs e)
         {
+            Log.Register($"Changing {lblFastActionMenuShortcut.Text} Shortcut to {new KeysConverter().ConvertToInvariantString(e.KeyData)}");
             txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(e.KeyData);
-            KeyEventHandler.ShortcutFastActionMenu = new ShortcutKeys(e.Control,e.Alt,e.Shift,e.KeyCode);
+            KeyEventHandler.ShortcutFastActionMenu = new ShortcutKeys(e.Control, e.Alt, e.Shift, e.KeyCode);
+            Log.Register($"{lblFastActionMenuShortcut.Text} Shortcut Changed to {txtFastActionMenuShortcut.Text}");
+        }
+
+        private void txtFastActionMenuShortcut_Leave(object sender, EventArgs e)
+        {
+            if (txtFastActionMenuShortcut.Text == "Enter Shortcut ...")
+            {
+                txtFastActionMenuShortcut.Text = new KeysConverter().ConvertToInvariantString(KeyEventHandler.ShortcutFastActionMenu.GetKeys());
+                Log.Register($"Changing {lblFastActionMenuShortcut.Text} Shortcut Ended");
+            }
+        }
+
+        #endregion
+
+        #region Optional Upgrades
+
+        private void chbSendCursorFinalPosition_CheckedChanged(object sender, EventArgs e)
+        {
+            InputData.Options(chbSendCursorFinalPosition.Checked, chbRequestCursorType.Checked, chbConnectionStatusRefreshConstantly.Checked, chbCompressData.Checked);
+        }
+
+        private void chbRequestCursorType_CheckedChanged(object sender, EventArgs e)
+        {
+            InputData.Options(chbSendCursorFinalPosition.Checked, chbRequestCursorType.Checked, chbConnectionStatusRefreshConstantly.Checked, chbCompressData.Checked);
+        }
+
+        private void chbCompressData_CheckedChanged(object sender, EventArgs e)
+        {
+            InputData.Options(chbSendCursorFinalPosition.Checked, chbRequestCursorType.Checked, chbConnectionStatusRefreshConstantly.Checked, chbCompressData.Checked);
         }
 
         #endregion
@@ -327,5 +388,6 @@ namespace RelativeMouseRDP
         }
 
         #endregion
+
     }
 }

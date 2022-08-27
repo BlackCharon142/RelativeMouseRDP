@@ -38,7 +38,6 @@
             this.tsmiGameMode = new System.Windows.Forms.ToolStripMenuItem();
             this.pbRecordingIndicator = new System.Windows.Forms.PictureBox();
             this.RecorderCheck = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
             this.cmsFunctions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbRecordingIndicator)).BeginInit();
             this.SuspendLayout();
@@ -119,23 +118,12 @@
             this.RecorderCheck.Interval = 1;
             this.RecorderCheck.Tick += new System.EventHandler(this.RecorderCheck_Tick);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(14, 63);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(50, 20);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
-            // 
             // frm_Overlay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.ClientSize = new System.Drawing.Size(100, 100);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.pbRecordingIndicator);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
@@ -153,7 +141,6 @@
             this.cmsFunctions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbRecordingIndicator)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -164,7 +151,6 @@
         private ToolStripMenuItem tsmiSendMenuShortcut;
         private PictureBox pbRecordingIndicator;
         private System.Windows.Forms.Timer RecorderCheck;
-        private Label label1;
         private ToolStripMenuItem tsmiGameMode;
         private ToolStripSeparator tss1;
         private ToolStripMenuItem tsmiSendCtrlAltDelete;

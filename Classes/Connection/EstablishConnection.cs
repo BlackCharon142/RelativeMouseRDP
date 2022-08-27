@@ -208,7 +208,7 @@ namespace RelativeMouseRDP
                         switch (ConnectionMethod)
                         {
                             case ConnectionMethods.TCP:
-                                (Server as TCPServer).Start();
+                                ((TCPServer)Server).Start();
                                 Log.Register("Server is Online!");
                                 ServerStatus = true;
                                 return true;
@@ -223,7 +223,7 @@ namespace RelativeMouseRDP
                         switch (ConnectionMethod)
                         {
                             case ConnectionMethods.TCP:
-                                (Server as TCPClient).ConnectAsync();
+                                ((TCPClient)Server).ConnectAsync();
                                 Log.Register("Client Server is Online!");
                                 ServerStatus = true;
                                 return true;
@@ -260,7 +260,7 @@ namespace RelativeMouseRDP
                         switch (ConnectionMethod)
                         {
                             case ConnectionMethods.TCP:
-                                (Server as TCPServer).Stop();
+                                ((TCPServer)Server).Stop();
                                 Log.Register("Server is Offline!");
                                 ServerStatus = false;
                                 return true;
@@ -275,7 +275,7 @@ namespace RelativeMouseRDP
                         switch (ConnectionMethod)
                         {
                             case ConnectionMethods.TCP:
-                                (Server as TCPClient).DisconnectAndStop();
+                                ((TCPClient)Server).DisconnectAndStop();
                                 Log.Register("Server is Offline!");
                                 ServerStatus = false;
                                 return true;
@@ -297,6 +297,34 @@ namespace RelativeMouseRDP
             }
 
             return false;
+        }
+
+        public static void SendMessage(string message)
+        {
+            if (Server != null)
+            {
+                if (ServerStatus)
+                {
+                    if (Position == Positions.Server)
+                    {
+                        switch (ConnectionMethod)
+                        {
+                            case ConnectionMethods.TCP:
+                                ((TCPServer)Server).SendMessage(message);
+                                break;
+                        }
+                    }
+                    else if (Position == Positions.Client)
+                    {
+                        switch (ConnectionMethod)
+                        {
+                            case ConnectionMethods.TCP:
+                                ((TCPClient)Server).SendAsync(message);
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         #endregion

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace RelativeMouseRDP
 {
@@ -307,6 +309,7 @@ namespace RelativeMouseRDP
         {
             MoveDelta = 'V',
             MovePosition = 'P',
+            MouseBoundary = 'B',
             Scroll = 'S'
         }
 
@@ -316,31 +319,40 @@ namespace RelativeMouseRDP
             Y = 'Y'
         }
 
+        enum Boundary
+        {
+            Width = 'W',
+            Height = 'H'
+        }
+
         enum Option
         {
             CursorState = 'C',
-            SpeedTest = 'T',
-            Compression = 'Z'
+            SpeedTest = 'T'
         }
 
         #endregion
 
-        public static Keys DownKey { get; private set; }
-        public static Keys UpKey { get; private set; }
+        public static Keys DownKey { get; private set; } = Keys.None;
+        public static Keys UpKey { get; private set; } = Keys.None;
 
-        public static MouseButtons DownButton { get; private set; }
-        public static MouseButtons UpButton { get; private set; }
-        public static int MouseWheelDelta { get; private set; }
+        public static MouseButtons DownButton { get; private set; } = MouseButtons.None;
+        public static MouseButtons UpButton { get; private set; } = MouseButtons.None;
+        public static int MouseWheelDelta { get; private set; } = 0;
 
-        public static int CursorPositionX { get; private set; }
-        public static int CursorPositionY { get; private set; }
+        public static int? CursorPositionX { get; private set; } = null;
+        public static int? CursorPositionY { get; private set; } = null;
+        public static int BoundaryWidth { get; private set; } = 0;
+        public static int BoundaryHeight { get; private set; } = 0;
 
-        public static int CursorDeltaX { get; private set; }
-        public static int CursorDeltaY { get; private set; }
 
-        public static bool RequestCursorState { get; private set; }
-        public static bool NotifySpeedTest { get; private set; }
-        public static bool NotifyCompression { get; private set; }
+        public static int CursorDeltaX { get; private set; } = 0;
+        public static int CursorDeltaY { get; private set; } = 0;
+
+        public static bool SendFinalPosition { get; private set; } = false;
+        public static bool RequestCursorState { get; private set; } = false;
+        public static bool NotifySpeedTest { get; private set; } = false;
+        public static bool NotifyCompression { get; private set; } = false;
 
 
         private static void ResetData()
@@ -351,15 +363,214 @@ namespace RelativeMouseRDP
             DownButton = MouseButtons.None;
             UpButton = MouseButtons.None;
 
-            CursorPositionX = 0;
-            CursorPositionY = 0;
+            MouseWheelDelta = 0;
+
+            CursorPositionX = null;
+            CursorPositionY = null;
+            BoundaryWidth = 0;
+            BoundaryHeight = 0;
+
+            CursorDeltaX = 0;
+            CursorDeltaY = 0;
         }
 
         public static void SendData()
         {
-            /*things happening*/
+            string message = "";
+
+            if (DownKey != Keys.None)
+            {
+                message += ((char)Input.Key);
+                message += ((char)KeyEvent.Down);
+
+                message += (long)DownKey;
+                message += '.';
+            }
+            if (UpKey != Keys.None)
+            {
+                message += ((char)Input.Key);
+                message += ((char)KeyEvent.Up);
+
+                message += (long)UpKey;
+                message += '.';
+            }
+
+
+            if (DownButton != MouseButtons.None)
+            {
+                message += ((char)Input.Mouse);
+                message += ((char)KeyEvent.Down);
+                message += (long)DownButton;
+
+                message += '.';
+            }
+            if (UpButton != MouseButtons.None)
+            {
+                message += ((char)Input.Mouse);
+                message += ((char)KeyEvent.Up);
+                message += (long)UpButton;
+
+                message += '.';
+            }
+            if (MouseWheelDelta != 0)
+            {
+                message += ((char)Input.Mouse);
+                message += ((char)MouseEvent.Scroll);
+                message += (long)MouseWheelDelta;
+
+                message += '.';
+            }
+
+
+            if (SendFinalPosition)
+            {
+                if (CursorPositionX != null && CursorPositionY != null)
+                {
+                    message += ((char)MouseEvent.MovePosition);
+
+                    //message += ((char)Movement.X);
+                    message += CursorPositionX;
+
+                    message += ',';
+
+                    //message += ((char)Movement.Y);
+                    message += CursorPositionY;
+
+                    //message += ((char)MouseEvent.MouseBoundary);
+                    message += ',';
+
+                    //message += ((char)Boundary.Width);
+                    message += BoundaryWidth;
+
+                    message += ',';
+
+                    //message += ((char)Boundary.Height);
+                    message += BoundaryHeight;
+
+                    message += '.';
+                }
+            }
+            else if (CursorDeltaX != 0 && CursorDeltaY != 0)
+            {
+                message += ((char)MouseEvent.MoveDelta);
+
+                //message += ((char)Movement.X);
+                message += CursorDeltaX;
+
+                message += ',';
+
+                //message += ((char)Movement.Y);
+                message += CursorDeltaY;
+
+                message += '.';
+            }
+
+
+            if (RequestCursorState)
+            {
+                message += ((char)Option.CursorState);
+                message += '.';
+            }
+            if (NotifySpeedTest)
+            {
+                message += ((char)Option.SpeedTest);
+                message += '.';
+            }
+            if (NotifyCompression)
+            {
+                //message += ((char)Option.Compression);
+                //message += '.';
+            }
+
+            //message = message.Substring(message.Length - 1, 1);
+
+            if (EstablishConnection.GetServerStatus())
+            {
+                EstablishConnection.SendMessage(message);
+            }
 
             ResetData();
+        }
+
+        public static void OpenData(string message)
+        {
+            if (message.Contains('.'))
+            {
+                string[] data = message.Split('.');
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    switch ((Input)Convert.ToChar(data[i].Substring(0, 1)))
+                    {
+                        case Input.Key:
+                            switch ((KeyEvent)Convert.ToChar(data[i].Substring(1, 1)))
+                            {
+                                case KeyEvent.Down:
+                                    new InputSimulator().Keyboard.KeyDown((VirtualKeyCode)(Keys)Convert.ToInt64(data[i].Substring(2)));
+                                    break;
+
+                                case KeyEvent.Up:
+                                    new InputSimulator().Keyboard.KeyUp((VirtualKeyCode)(Keys)Convert.ToInt64(data[i].Substring(2)));
+                                    break;
+                            }
+                            break;
+
+
+                        case Input.Mouse:
+                            switch ((MouseEvent)Convert.ToChar(data[i].Substring(1, 1)))
+                            {
+                                case MouseEvent.MoveDelta:
+
+                                    /*string[] delta = data[i].Substring(2).Split(',');
+
+                                    Point moveDelta = new Point();
+                                    for (int k = 0; k < delta.Length; k++)
+                                    {
+                                        switch ((Movement)Convert.ToChar(delta[k].Substring(0, 1)))
+                                        {
+                                            case Movement.X:
+                                                moveDelta.X = Convert.ToInt32(delta[k].Substring(1));
+                                                break;
+
+                                            case Movement.Y:
+                                                moveDelta.Y = Convert.ToInt32(delta[k].Substring(1));
+                                                break;
+                                        }
+                                    }*/
+                                    new InputSimulator().Mouse.MoveMouseBy(Convert.ToInt32(data[i].Substring(2, data[i].IndexOf(','))), Convert.ToInt32(data[i].Substring(data[i].IndexOf(',') + 1)));
+                                    break;
+
+                                case MouseEvent.MovePosition:
+                                    Point mouseposition = new Point(Convert.ToInt32(data[i].Split(',')[0].Substring(1)), Convert.ToInt32(data[i].Split(',')[1]));
+                                    Size boundary = new Size(Convert.ToInt32(data[i].Split(',')[2]), Convert.ToInt32(data[i].Split(',')[3]));
+
+                                    Point nextposition = MapRange(mouseposition, boundary, Screen.PrimaryScreen.Bounds.Size);
+
+                                    Point mouseDelta = GetDelta(Cursor.Position, nextposition);
+
+                                    new InputSimulator().Mouse.MoveMouseBy(mouseDelta.X, mouseDelta.Y);
+                                    break;
+
+                                case MouseEvent.Scroll:
+                                    new InputSimulator().Mouse.VerticalScroll(Convert.ToInt32(data[i].Substring(2)));
+                                    break;
+                            }
+                            break;
+
+                        default:
+                            switch ((Option)Convert.ToChar(data[i].Substring(0, 1)))
+                            {
+                                case Option.CursorState:
+                                    EstablishConnection.SendMessage(CursorInfo.GetCursorType().ID.ToString());
+                                    break;
+                                case Option.SpeedTest:
+                                    EstablishConnection.SendMessage("ST");
+                                    break;
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         #region Set Data
@@ -369,11 +580,15 @@ namespace RelativeMouseRDP
         public static void DownEvent(Keys keysDown)
         {
             DownKey = keysDown;
+            ActionLog.Register($"KeyDown : {keysDown}");
+            SendData();
         }
 
         public static void DownEvent(MouseButtons buttonsDown)
         {
             DownButton = buttonsDown;
+            ActionLog.Register($"MouseKeyDown : {buttonsDown}");
+            SendData();
         }
 
         #endregion
@@ -383,40 +598,66 @@ namespace RelativeMouseRDP
         public static void UpEvent(Keys keysUp)
         {
             UpKey = keysUp;
+            ActionLog.Register($"KeyUp : {keysUp}");
+            SendData();
         }
 
         public static void UpEvent(MouseButtons buttonsUp)
         {
             UpButton = buttonsUp;
+            ActionLog.Register($"MouseKeyUp : {buttonsUp}");
+            SendData();
         }
 
         #endregion
 
-        public static void Position(Point position)
+        public static void Position(Point position, Size boundarySize)
         {
             CursorPositionX = position.X;
             CursorPositionY = position.Y;
+
+            BoundaryWidth = boundarySize.Width;
+            BoundaryHeight = boundarySize.Height;
+
+            ActionLog.Register($"X Position : {position.X}, Y Position : {position.Y}, X Boundary : {boundarySize.Width}, Y Boundary : {boundarySize.Height}");
+            SendData();
         }
 
         public static void Delta(Point delta)
         {
             CursorDeltaX = delta.X;
             CursorDeltaY = delta.Y;
+            ActionLog.Register($"X Delta : {delta.X}, Y Delta : {delta.Y}");
+            SendData();
         }
 
         public static void SetWheelDelta(int delta)
         {
             MouseWheelDelta = delta;
+            ActionLog.Register($"MouseWheel : {delta}");
+            SendData();
         }
 
-        public static void Options(bool requestCursorState, bool notifySpeedTest, bool notifyCompression)
+        public static void Options(bool sendFinalPosition, bool requestCursorState, bool notifySpeedTest, bool notifyCompression)
         {
+            SendFinalPosition = sendFinalPosition;
             RequestCursorState = requestCursorState;
             NotifySpeedTest = notifySpeedTest;
             NotifyCompression = notifyCompression;
         }
 
         #endregion
+
+        public static Point MapRange(Point mousePosition, Size fromBoundary, Size toBoundary)
+        {
+            //Y = (X-A)/(B-A) * (D-C) + C
+            return new Point((int)((mousePosition.X - 0f) / (fromBoundary.Width - 0f) * (toBoundary.Width - 0f) + 0f), (int)((mousePosition.Y - 0f) / (fromBoundary.Height - 0f) * (toBoundary.Height - 0f) + 0f));
+        }
+
+        public static Point GetDelta(Point currentMousePosition, Point nextMousePosition)
+        {
+            return new Point(nextMousePosition.X - currentMousePosition.X, nextMousePosition.Y - currentMousePosition.Y);
+        }
     }
 
     #endregion

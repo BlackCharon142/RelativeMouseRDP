@@ -50,8 +50,8 @@ namespace RelativeMouseRDP
             string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
             Log.Register("Incoming: " + message);
 
-            if (message == "!x!")
-                Disconnect();
+            //if (message == "!x!")
+            //    Disconnect();
         }
 
         protected override void OnError(SocketError error)
@@ -62,9 +62,31 @@ namespace RelativeMouseRDP
 
     class TCPServer : TcpServer
     {
+        TCPSession session;
+
         public TCPServer(IPAddress address, int port) : base(address, port) { }
 
-        protected override TcpSession CreateSession() { return new TCPSession(this); }
+        protected override TcpSession CreateSession()
+        {
+            session = new TCPSession(this);
+            return session;
+        }
+
+        public bool SendMessage(string message)
+        {
+            if (this.IsStarted)
+            {
+                try
+                {
+                    session.SendAsync(message);
+                    return true;
+                }
+                catch
+                { }
+                return false;
+            }
+            return false;
+        }
 
         protected override void OnError(SocketError error)
         {

@@ -104,12 +104,12 @@ namespace RelativeMouseRDP
         private void RecorderCheck_Tick(object sender, EventArgs e)
         {
             if (LastInputInfo.GetLastInputTime() >= 150)
-                RecordingIndicator();
+                RecordingIndicator(false);
             else
                 RecordingIndicator(true);
         }
 
-        private void RecordingIndicator(bool recording = false)
+        private void RecordingIndicator(bool recording)
         {
             if (recording)
             {
@@ -193,8 +193,10 @@ namespace RelativeMouseRDP
                         lastCursorPosition.Y = currentCursorPosition.Y;
                     }
 
-                    InputData.Delta(new Point(X, Y));
-                    InputData.Position(e.Location);
+                    if (InputData.SendFinalPosition)
+                        InputData.Position(e.Location, this.Size);
+                    else
+                        InputData.Delta(new Point(X, Y));
                 }
             }
             else
@@ -204,13 +206,12 @@ namespace RelativeMouseRDP
                 if (mousePos == lastCursorPosition)
                     return;
 
+                if (InputData.SendFinalPosition)
+                    InputData.Position(e.Location, this.Size);
+                else
+                    InputData.Delta(new Point((mousePos.X - lastCursorPosition.X), (mousePos.Y - lastCursorPosition.Y)));
+
                 lastCursorPosition = MousePosition;
-
-                pbRecordingIndicator.Left += (mousePos.X - lastCursorPosition.X);
-                pbRecordingIndicator.Top += (mousePos.Y - lastCursorPosition.Y);
-
-                InputData.Delta(new Point((mousePos.X - lastCursorPosition.X), (mousePos.Y - lastCursorPosition.Y)));
-                InputData.Position(e.Location);
             }
         }
 
