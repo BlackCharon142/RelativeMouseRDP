@@ -38,6 +38,10 @@ namespace RelativeMouseRDP
                     Log.Register($"TCP Server Connection to Client({clientSpecification.FullDetail()}) was Rejected!");
                 }
             }
+            else
+            {
+                Log.Register($"TCP Server Connection to Client({clientSpecification.FullDetail()}) was Successful!");
+            }
         }
 
         protected override void OnDisconnected()
@@ -51,8 +55,6 @@ namespace RelativeMouseRDP
             Log.Register("Incoming: " + message);
 
             InputData.OpenData(message);
-            //if (message == "!x!")
-            //    Disconnect();
         }
 
         protected override void OnError(SocketError error)

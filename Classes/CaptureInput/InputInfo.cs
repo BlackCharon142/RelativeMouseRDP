@@ -195,50 +195,6 @@ namespace RelativeMouseRDP
         }
     }
 
-    /*public class CursorType
-    {
-        public byte ID { get; }
-        public long Handle { get; }
-
-        public CursorType(byte _ID, long _Handle)
-        {
-            ID = _ID;
-            Handle = _Handle;
-        }
-    }
-
-    public static class CursorTypes
-    {
-        public static CursorType AppStarting { get; }  = new CursorType(0, Cursors.AppStarting.Handle.ToInt64());
-        public static CursorType Arrow       { get; }  = new CursorType(1, Cursors.Arrow.Handle.ToInt64());
-        public static CursorType Cross       { get; }  = new CursorType(2, Cursors.Cross.Handle.ToInt64());
-        public static CursorType Default     { get; }  = new CursorType(3, Cursors.Default.Handle.ToInt64());
-        public static CursorType Hand        { get; }  = new CursorType(4, Cursors.Hand.Handle.ToInt64());
-        public static CursorType Help        { get; }  = new CursorType(5, Cursors.Help.Handle.ToInt64());
-        public static CursorType HSplit      { get; }  = new CursorType(6, Cursors.HSplit.Handle.ToInt64());
-        public static CursorType IBeam       { get; }  = new CursorType(7, Cursors.IBeam.Handle.ToInt64());
-        public static CursorType No          { get; }  = new CursorType(8, Cursors.No.Handle.ToInt64());
-        public static CursorType NoMove2D    { get; }  = new CursorType(9, Cursors.NoMove2D.Handle.ToInt64());
-        public static CursorType NoMoveHoriz { get; }  = new CursorType(10, Cursors.NoMoveHoriz.Handle.ToInt64());
-        public static CursorType NoMoveVert  { get; }  = new CursorType(11, Cursors.NoMoveVert.Handle.ToInt64());
-        public static CursorType PanEast     { get; }  = new CursorType(12, Cursors.PanEast.Handle.ToInt64());
-        public static CursorType PanNE       { get; }  = new CursorType(13, Cursors.PanNE.Handle.ToInt64());
-        public static CursorType PanNorth    { get; }  = new CursorType(14, Cursors.PanNorth.Handle.ToInt64());
-        public static CursorType PanNW       { get; }  = new CursorType(15, Cursors.PanNW.Handle.ToInt64());
-        public static CursorType PanSE       { get; }  = new CursorType(16, Cursors.PanSE.Handle.ToInt64());
-        public static CursorType PanSouth    { get; }  = new CursorType(17, Cursors.PanSouth.Handle.ToInt64());
-        public static CursorType PanSW       { get; }  = new CursorType(18, Cursors.PanSW.Handle.ToInt64());
-        public static CursorType PanWest     { get; }  = new CursorType(19, Cursors.PanWest.Handle.ToInt64());
-        public static CursorType SizeAll     { get; }  = new CursorType(20, Cursors.SizeAll.Handle.ToInt64());
-        public static CursorType SizeNESW    { get; }  = new CursorType(21, Cursors.SizeNESW.Handle.ToInt64());
-        public static CursorType SizeNS      { get; }  = new CursorType(22, Cursors.SizeNS.Handle.ToInt64());
-        public static CursorType SizeNWSE    { get; }  = new CursorType(23, Cursors.SizeNWSE.Handle.ToInt64());
-        public static CursorType SizeWE      { get; }  = new CursorType(24, Cursors.SizeWE.Handle.ToInt64());
-        public static CursorType UpArrow     { get; }  = new CursorType(25, Cursors.UpArrow.Handle.ToInt64());
-        public static CursorType VSplit      { get; }  = new CursorType(26, Cursors.VSplit.Handle.ToInt64());
-        public static CursorType WaitCursor  { get; }  = new CursorType(27, Cursors.WaitCursor.Handle.ToInt64());
-    }*/
-
     #endregion
 
     #region Enable Cursor Visibility
@@ -420,23 +376,18 @@ namespace RelativeMouseRDP
                     message += ((char)Input.Mouse);
                     message += ((char)MouseEvent.MovePosition);
 
-                    //message += ((char)Movement.X);
                     message += CursorPositionX;
 
                     message += ',';
 
-                    //message += ((char)Movement.Y);
                     message += CursorPositionY;
 
-                    //message += ((char)MouseEvent.MouseBoundary);
                     message += ',';
 
-                    //message += ((char)Boundary.Width);
                     message += BoundaryWidth;
 
                     message += ',';
 
-                    //message += ((char)Boundary.Height);
                     message += BoundaryHeight;
 
                     message += '.';
@@ -447,12 +398,10 @@ namespace RelativeMouseRDP
                 message += ((char)Input.Mouse);
                 message += ((char)MouseEvent.MoveDelta);
 
-                //message += ((char)Movement.X);
                 message += CursorDeltaX;
 
                 message += ',';
 
-                //message += ((char)Movement.Y);
                 message += CursorDeltaY;
 
                 message += '.';
@@ -471,11 +420,9 @@ namespace RelativeMouseRDP
             }
             if (NotifyCompression)
             {
-                //message += ((char)Option.Compression);
-                //message += '.';
+
             }
 
-            //message = message.Substring(message.Length - 1, 1);
 
             if (EstablishConnection.GetServerStatus())
             {
@@ -573,23 +520,6 @@ namespace RelativeMouseRDP
                                         break;
 
                                     case MouseEvent.MoveDelta:
-
-                                        /*string[] delta = data[i].Substring(2).Split(',');
-
-                                        Point moveDelta = new Point();
-                                        for (int k = 0; k < delta.Length; k++)
-                                        {
-                                            switch ((Movement)Convert.ToChar(delta[k].Substring(0, 1)))
-                                            {
-                                                case Movement.X:
-                                                    moveDelta.X = Convert.ToInt32(delta[k].Substring(1));
-                                                    break;
-
-                                                case Movement.Y:
-                                                    moveDelta.Y = Convert.ToInt32(delta[k].Substring(1));
-                                                    break;
-                                            }
-                                        }*/
                                         new InputSimulator().Mouse.MoveMouseBy(Convert.ToInt32(data[i].Substring(2, data[i].IndexOf(',') - 2)), Convert.ToInt32(data[i].Substring(data[i].IndexOf(',') + 1)));
                                         break;
 
