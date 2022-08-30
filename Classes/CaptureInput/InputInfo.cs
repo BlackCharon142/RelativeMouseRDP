@@ -4,8 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using WindowsInput;
-using WindowsInput.Native;
+using GregsStack.InputSimulatorStandard;
+using GregsStack.InputSimulatorStandard.Native;
 
 namespace RelativeMouseRDP
 {
@@ -307,22 +307,11 @@ namespace RelativeMouseRDP
 
         enum MouseEvent
         {
+            Key = 'K',
             MoveDelta = 'V',
             MovePosition = 'P',
             MouseBoundary = 'B',
             Scroll = 'S'
-        }
-
-        enum Movement
-        {
-            X = 'X',
-            Y = 'Y'
-        }
-
-        enum Boundary
-        {
-            Width = 'W',
-            Height = 'H'
         }
 
         enum Option
@@ -399,6 +388,7 @@ namespace RelativeMouseRDP
             if (DownButton != MouseButtons.None)
             {
                 message += ((char)Input.Mouse);
+                message += ((char)MouseEvent.Key);
                 message += ((char)KeyEvent.Down);
                 message += (long)DownButton;
 
@@ -407,6 +397,7 @@ namespace RelativeMouseRDP
             if (UpButton != MouseButtons.None)
             {
                 message += ((char)Input.Mouse);
+                message += ((char)MouseEvent.Key);
                 message += ((char)KeyEvent.Up);
                 message += (long)UpButton;
 
@@ -426,6 +417,7 @@ namespace RelativeMouseRDP
             {
                 if (CursorPositionX != null && CursorPositionY != null)
                 {
+                    message += ((char)Input.Mouse);
                     message += ((char)MouseEvent.MovePosition);
 
                     //message += ((char)Movement.X);
@@ -452,6 +444,7 @@ namespace RelativeMouseRDP
             }
             else if (CursorDeltaX != 0 && CursorDeltaY != 0)
             {
+                message += ((char)Input.Mouse);
                 message += ((char)MouseEvent.MoveDelta);
 
                 //message += ((char)Movement.X);
@@ -500,74 +493,135 @@ namespace RelativeMouseRDP
 
                 for (int i = 0; i < data.Length; i++)
                 {
-                    switch ((Input)Convert.ToChar(data[i].Substring(0, 1)))
+                    if (!string.IsNullOrEmpty(data[i]))
                     {
-                        case Input.Key:
-                            switch ((KeyEvent)Convert.ToChar(data[i].Substring(1, 1)))
-                            {
-                                case KeyEvent.Down:
-                                    new InputSimulator().Keyboard.KeyDown((VirtualKeyCode)(Keys)Convert.ToInt64(data[i].Substring(2)));
-                                    break;
+                        switch ((Input)Convert.ToChar(data[i].Substring(0, 1)))
+                        {
+                            case Input.Key:
+                                switch ((KeyEvent)Convert.ToChar(data[i].Substring(1, 1)))
+                                {
+                                    case KeyEvent.Down:
+                                        new InputSimulator().Keyboard.KeyDown((VirtualKeyCode)(Keys)Convert.ToInt64(data[i].Substring(2)));
+                                        break;
 
-                                case KeyEvent.Up:
-                                    new InputSimulator().Keyboard.KeyUp((VirtualKeyCode)(Keys)Convert.ToInt64(data[i].Substring(2)));
-                                    break;
-                            }
-                            break;
+                                    case KeyEvent.Up:
+                                        new InputSimulator().Keyboard.KeyUp((VirtualKeyCode)(Keys)Convert.ToInt64(data[i].Substring(2)));
+                                        break;
+                                }
+                                break;
 
 
-                        case Input.Mouse:
-                            switch ((MouseEvent)Convert.ToChar(data[i].Substring(1, 1)))
-                            {
-                                case MouseEvent.MoveDelta:
+                            case Input.Mouse:
+                                switch ((MouseEvent)Convert.ToChar(data[i].Substring(1, 1)))
+                                {
+                                    case MouseEvent.Key:
 
-                                    /*string[] delta = data[i].Substring(2).Split(',');
-
-                                    Point moveDelta = new Point();
-                                    for (int k = 0; k < delta.Length; k++)
-                                    {
-                                        switch ((Movement)Convert.ToChar(delta[k].Substring(0, 1)))
+                                        switch ((KeyEvent)Convert.ToChar(data[i].Substring(2, 1)))
                                         {
-                                            case Movement.X:
-                                                moveDelta.X = Convert.ToInt32(delta[k].Substring(1));
+                                            case KeyEvent.Down:
+                                                MouseButtons downButtons = (MouseButtons)Convert.ToInt32(data[i].Substring(3));
+
+                                                if ((downButtons & MouseButtons.Left) == MouseButtons.Left)
+                                                {
+                                                    new InputSimulator().Mouse.LeftButtonDown();
+                                                }
+                                                if ((downButtons & MouseButtons.Middle) == MouseButtons.Middle)
+                                                {
+                                                    new InputSimulator().Mouse.MiddleButtonDown();
+                                                }
+                                                if ((downButtons & MouseButtons.Right) == MouseButtons.Right)
+                                                {
+                                                    new InputSimulator().Mouse.RightButtonDown();
+                                                }
+                                                if ((downButtons & MouseButtons.XButton1) == MouseButtons.XButton1)
+                                                {
+                                                    new InputSimulator().Mouse.XButtonDown((int)(downButtons & MouseButtons.XButton1));
+
+                                                }
+                                                if ((downButtons & MouseButtons.XButton2) == MouseButtons.XButton2)
+                                                {
+                                                    new InputSimulator().Mouse.XButtonDown((int)(downButtons & MouseButtons.XButton2));
+                                                }
                                                 break;
 
-                                            case Movement.Y:
-                                                moveDelta.Y = Convert.ToInt32(delta[k].Substring(1));
+                                            case KeyEvent.Up:
+                                                MouseButtons upButtons = (MouseButtons)Convert.ToInt32(data[i].Substring(3));
+
+                                                if ((upButtons & MouseButtons.Left) == MouseButtons.Left)
+                                                {
+                                                    new InputSimulator().Mouse.LeftButtonUp();
+                                                }
+                                                if ((upButtons & MouseButtons.Middle) == MouseButtons.Middle)
+                                                {
+                                                    new InputSimulator().Mouse.MiddleButtonUp();
+                                                }
+                                                if ((upButtons & MouseButtons.Right) == MouseButtons.Right)
+                                                {
+                                                    new InputSimulator().Mouse.RightButtonUp();
+                                                }
+                                                if ((upButtons & MouseButtons.XButton1) == MouseButtons.XButton1)
+                                                {
+                                                    new InputSimulator().Mouse.XButtonUp((int)(upButtons & MouseButtons.XButton1));
+
+                                                }
+                                                if ((upButtons & MouseButtons.XButton2) == MouseButtons.XButton2)
+                                                {
+                                                    new InputSimulator().Mouse.XButtonUp((int)(upButtons & MouseButtons.XButton2));
+                                                }
                                                 break;
                                         }
-                                    }*/
-                                    new InputSimulator().Mouse.MoveMouseBy(Convert.ToInt32(data[i].Substring(2, data[i].IndexOf(','))), Convert.ToInt32(data[i].Substring(data[i].IndexOf(',') + 1)));
-                                    break;
+                                        break;
 
-                                case MouseEvent.MovePosition:
-                                    Point mouseposition = new Point(Convert.ToInt32(data[i].Split(',')[0].Substring(1)), Convert.ToInt32(data[i].Split(',')[1]));
-                                    Size boundary = new Size(Convert.ToInt32(data[i].Split(',')[2]), Convert.ToInt32(data[i].Split(',')[3]));
+                                    case MouseEvent.MoveDelta:
 
-                                    Point nextposition = MapRange(mouseposition, boundary, Screen.PrimaryScreen.Bounds.Size);
+                                        /*string[] delta = data[i].Substring(2).Split(',');
 
-                                    Point mouseDelta = GetDelta(Cursor.Position, nextposition);
+                                        Point moveDelta = new Point();
+                                        for (int k = 0; k < delta.Length; k++)
+                                        {
+                                            switch ((Movement)Convert.ToChar(delta[k].Substring(0, 1)))
+                                            {
+                                                case Movement.X:
+                                                    moveDelta.X = Convert.ToInt32(delta[k].Substring(1));
+                                                    break;
 
-                                    new InputSimulator().Mouse.MoveMouseBy(mouseDelta.X, mouseDelta.Y);
-                                    break;
+                                                case Movement.Y:
+                                                    moveDelta.Y = Convert.ToInt32(delta[k].Substring(1));
+                                                    break;
+                                            }
+                                        }*/
+                                        new InputSimulator().Mouse.MoveMouseBy(Convert.ToInt32(data[i].Substring(2, data[i].IndexOf(',') - 2)), Convert.ToInt32(data[i].Substring(data[i].IndexOf(',') + 1)));
+                                        break;
 
-                                case MouseEvent.Scroll:
-                                    new InputSimulator().Mouse.VerticalScroll(Convert.ToInt32(data[i].Substring(2)));
-                                    break;
-                            }
-                            break;
+                                    case MouseEvent.MovePosition:
+                                        Point mouseposition = new Point(Convert.ToInt32(data[i].Split(',')[0].Substring(2)), Convert.ToInt32(data[i].Split(',')[1]));
+                                        Size boundary = new Size(Convert.ToInt32(data[i].Split(',')[2]), Convert.ToInt32(data[i].Split(',')[3]));
 
-                        default:
-                            switch ((Option)Convert.ToChar(data[i].Substring(0, 1)))
-                            {
-                                case Option.CursorState:
-                                    EstablishConnection.SendMessage(CursorInfo.GetCursorType().ID.ToString());
-                                    break;
-                                case Option.SpeedTest:
-                                    EstablishConnection.SendMessage("ST");
-                                    break;
-                            }
-                            break;
+                                        Point nextposition = MapRange(mouseposition, boundary, Screen.PrimaryScreen.Bounds.Size);
+
+                                        Point mouseDelta = GetDelta(Cursor.Position, nextposition);
+
+                                        new InputSimulator().Mouse.MoveMouseBy(mouseDelta.X, mouseDelta.Y);
+                                        break;
+
+                                    case MouseEvent.Scroll:
+                                        new InputSimulator().Mouse.VerticalScroll(Convert.ToInt32(data[i].Substring(2)));
+                                        break;
+                                }
+                                break;
+
+                            default:
+                                switch ((Option)Convert.ToChar(data[i].Substring(0, 1)))
+                                {
+                                    case Option.CursorState:
+                                        EstablishConnection.SendMessage(CursorInfo.GetCursorType().ID.ToString());
+                                        break;
+                                    case Option.SpeedTest:
+                                        EstablishConnection.SendMessage("ST");
+                                        break;
+                                }
+                                break;
+                        }
                     }
                 }
             }

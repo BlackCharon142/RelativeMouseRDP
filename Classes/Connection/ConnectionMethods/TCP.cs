@@ -50,6 +50,7 @@ namespace RelativeMouseRDP
             string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
             Log.Register("Incoming: " + message);
 
+            InputData.OpenData(message);
             //if (message == "!x!")
             //    Disconnect();
         }
