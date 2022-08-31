@@ -1,6 +1,6 @@
 # RelativeMouseRDP
 <B>This Project Has Unfortunatly Been Discontinued Temporarly</B><br><br>
-The method that the program uses to apply mouse inputs is currently not good but it does work, until a better way of moving the cursor is discovered this project will stay as it is<br><br>
+The method that the program uses to get mouse delta and apply inputs is currently not good and sometimes laggy but it does work, until a better way of moving the cursor is discovered this project will stay as it is<br><br>
 <h2>About This Software</h2>
 This software is a replica of <a href="https://github.com/TKMAX777/RemoteRelativeInput">RemoteRelativeInput</a> by <a href="https://github.com/TKMAX777">TKMAX777</a> with a more user friendly enviorment<br><br>
 <h2>Supported OS</h2>
