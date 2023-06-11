@@ -4,8 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using GregsStack.InputSimulatorStandard;
-using GregsStack.InputSimulatorStandard.Native;
+//using GregsStack.InputSimulatorStandard;
+//using GregsStack.InputSimulatorStandard.Native;
+using WindowsInput;
 
 namespace RelativeMouseRDP
 {
